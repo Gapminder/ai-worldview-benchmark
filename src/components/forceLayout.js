@@ -1,5 +1,6 @@
 import * as d3 from "npm:d3"; 
-export default function forceLayout({
+
+function forceLayout({
     data,
     x = (d) => d.x,
     y = () => Math.random() * 10 - 5,
@@ -27,3 +28,15 @@ export default function forceLayout({
   
     return {simulation, nodes};
   }
+
+  function runForceSimulation({dataset, x, xScale, ticks = 10}){
+
+    const forceLayoutInstance = forceLayout({data: dataset, x, xScale});
+    
+    for (let i = 0; i < ticks; i++) {
+      forceLayoutInstance.simulation.tick();
+    }
+    return forceLayoutInstance.nodes;
+  }
+
+  export {runForceSimulation, forceLayout};
