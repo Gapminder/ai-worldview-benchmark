@@ -2,7 +2,7 @@
 import * as d3 from "npm:d3"; 
 
 
-export default function BotHeader({vendor, botLogos, model_configurationWithHuman, selectedModels, dataWithPrecomputedForceLayoutXY, left=0, top=0}){
+export default function BotHeader({vendor, botLogos, model_configurationWithHuman, setSelectedModel, selectedModels, dataWithPrecomputedForceLayoutXY, left=0, top=0}){
     function getModelOptions(vendor) {
       return model_configurationWithHuman
         .filter(f => f.vendor === vendor && dataWithPrecomputedForceLayoutXY.has(f.model_configuration))
@@ -40,9 +40,7 @@ export default function BotHeader({vendor, botLogos, model_configurationWithHuma
       select.property('value', selectedModels[vendor]);
       select.on("change", event => {
         const setOption = d3.select(event.target).property("value");
-        const newSelectedModels = Object.assign({}, selectedModels, {[vendor]: setOption});
-        console.log("NOT IMPLEMENTED")
-        //mutable selectedModels = newSelectedModels;
+        setSelectedModel(vendor, setOption);
       })
     }
     

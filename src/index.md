@@ -99,7 +99,13 @@ const chartHeight = ({
 ```js 
 const rollup = d3.rollups(model_configurationWithHuman, v=>v.find(f => f["is--latest_model"])?.model_configuration, d => d.vendor)
   .filter(([_, f]) => dataWithPrecomputedForceLayoutXY.has(f));
-const selectedModels = Object.fromEntries(rollup);
+```
+```js
+const selectedModels = Mutable(Object.fromEntries(rollup));
+const setSelectedModel = (vendor, model)=>{
+  const newSelectedModels = Object.assign({}, selectedModels.value, {[vendor]: model});
+  selectedModels.value = newSelectedModels;
+}
 ```
 
 ```js 
@@ -133,6 +139,7 @@ const charts = sections.map(config => ({
   header: BotHeader({
       botLogos, 
       selectedModels, 
+      setSelectedModel,
       model_configurationWithHuman, 
       dataWithPrecomputedForceLayoutXY, 
       top: chartHeight.headerShiftHeight, 
