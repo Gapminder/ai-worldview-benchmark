@@ -9,8 +9,14 @@ Then, to start the local preview server, run:
 npm run dev
 ```
 
-Then visit <http://localhost:3000> to preview the app.
-For more, see <https://observablehq.com/framework/getting-started>.
+Then visit <http://localhost:3000> to preview the app. For more, see [the docs](https://observablehq.com/framework/getting-started).
+
+## Deploy instructions
+⚠️ This is unusual: the app won't automatically show the new data when it updates on [github repo](https://github.com/open-numbers/ddf--gapminder--ai_worldview_benchmark.git). It caches the data itself and needs to be redeployed.
+
+Angie, Dab, Ola, Semio have access to [Gapminder workspace](https://observablehq.com/@gapminder) on Observable. Log in, see [Data Apps](https://observablehq.com/projects/@gapminder/ai-worldview-benchmark/deploys ) and press "Deploy" button:
+
+Also, pushing to `master` branch on GitHub will trigger the redeploy
 
 ## Project structure
 
