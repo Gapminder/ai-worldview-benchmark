@@ -1,4 +1,7 @@
-export default function promptsPopup(){
+import * as d3 from "npm:d3"; 
+
+
+export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, model_configurationWithHuman, selectedModels, questionMap, datapoints_prompt_variationMap, promptsMap}){
     let inner_question;
     let inner_model;
     let inner_view;
@@ -105,7 +108,7 @@ export default function promptsPopup(){
       
       view.append("div")
         .style("display", "inline-block")
-        .html(`<img crossorigin="anonymous" src=${icons.find(f => f.goal===goal).image.src}>`)
+        .html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
         .style("width", "40px")
         .style("height", "40px")
         .style("position", "relative")
@@ -251,10 +254,10 @@ export default function promptsPopup(){
               A (${getCorrectnessText(questionProps.option_a_correctness)}). ${questionProps.option_a}
             </span>,     
             <span style="color: ${cOptionScale(questionProps.option_b_correctness)}">
-              B (${getCorrectnessText(questionProps.option_b_correctness)}). ${questionProps.option_a}
+              B (${getCorrectnessText(questionProps.option_b_correctness)}). ${questionProps.option_b}
             </span>,
             <span style="color: ${cOptionScale(questionProps.option_c_correctness)}">
-              C (${getCorrectnessText(questionProps.option_c_correctness)}). ${questionProps.option_a}
+              C (${getCorrectnessText(questionProps.option_c_correctness)}). ${questionProps.option_c}
             </span>.
           `)
     

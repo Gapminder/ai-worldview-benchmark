@@ -46,6 +46,7 @@ import QuestionsCatalog from "./components/QuestionsCatalog.js"
 import {axis, explanation, explanationTopics} from "./components/Misc.js"
 import {botLogos, sdgGoalText, sdgcolors, sdgicons} from "./components/references.js"
 import interactivity from "./components/interactivity.js"
+import promptsPopup from "./components/PropmptsPopup.js"
 ```
 
 ```js DATA
@@ -53,6 +54,13 @@ const concepts = FileAttachment("data/concepts.csv").csv({typed: true});
 const datapoints_correct_rate = await FileAttachment("data/datapoints-rates.csv").csv({typed: true});
 const question = await FileAttachment("data/entities-questions.csv").csv({typed: true});
 const model_configurationWithHuman = await FileAttachment("data/entities-mdlconfigs.csv").csv({typed: true});
+const datapoints_prompts = await FileAttachment("data/datapoints-prompts.csv").csv({typed: true});
+const prompt_variations = await FileAttachment("data/entities-promptvars.csv").csv({typed: true});
+const promptsMap = d3.rollup(prompt_variations, v=>v[0].question_prompt_template, d=>d.prompt_variation);
+
+const datapoints_prompt_variationMap = d3.group(datapoints_prompts, d => d.model_configuration, d=>d.question)
+
+const model_configurationWithHumanMap = d3.rollup(model_configurationWithHuman, v=>v[0], d=>d.model_configuration)
 const human = question.map(m => ({question: m.question, model_configuration: "human", correct_rate: 100-(+m.human_wrong_percentage)}))
 const datapoints_ratesWithHuman = datapoints_correct_rate.concat(human);
 const questionMap = d3.rollup(question, v=>v[0], d=>d.question);
@@ -164,7 +172,8 @@ const charts = sections.map(config => ({
   `
 
   console.log("APP")
-  interactivity({app, sections:charts,  sdgcolors, questionMap, sdgicons, sdgGoalText});
+  const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
+  interactivity({app, sections:charts,  sdgcolors, questionMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp});
 ```
 
 

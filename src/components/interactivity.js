@@ -1,7 +1,7 @@
 import * as d3 from "npm:d3"; 
 
 
-export default function interactivity({app, sections, sdgcolors, questionMap, sdgGoalText, selectedModels, sdgicons}){
+export default function interactivity({app, sections, sdgcolors, questionMap, sdgGoalText, selectedModels, sdgicons, promptsPopup}){
 
     function toSentenceCase(str) {
       if (!str) return str; // Handle empty or null strings
