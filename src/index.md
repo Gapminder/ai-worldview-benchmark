@@ -78,7 +78,7 @@ width;
 const margin = {right: 20, left: 20, bottom: 100, top: 0};
 const xScale = d3.scaleLinear([0, 100], [margin.left, getChartWidth() - margin.right - margin.left]);
 const chartHeight = ({
-    canvasHeight: (innerHeight-200)/7 +100,
+    canvasHeight: (innerHeight-200)/7 + 50,
     singleChartHeight: (innerHeight-200)/7,
     headerShiftHeight: 30
 });

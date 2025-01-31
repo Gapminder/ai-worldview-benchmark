@@ -77,14 +77,20 @@ export default function OneChartCanvas({
       const mouseX = (event.clientX - rect.left);
       const mouseY = (event.clientY - rect.top);
   
-      const distances = data.map((d, i)=>{
-         const dx = mouseX - d.x;
-         const dy = mouseY - height/2 - d.y;
-         return {index: i, distance: Math.sqrt(dx * dx + dy * dy)};
-      }).toSorted((a,b) => a.distance - b.distance);
+      let nearestIndex = null;
+      let nearestDistance = Infinity;
+      for (let i = 0; i<data.length; i++){
+        const dx = mouseX - data[i].x;
+        const dy = mouseY - height/2 - data[i].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < nearestDistance) {
+          nearestDistance = distance; 
+          nearestIndex = i
+        };
+      }
   
-      if(distances[0].distance > 10) return null;
-      return distances[0].index;
+      if(nearestDistance > 10) return null;
+      return nearestIndex;
     }
     
     render();
