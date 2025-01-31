@@ -1,5 +1,7 @@
 
 export default function OneChartCanvas({
+    vendor,
+    questionMap,
     marginBottom = 0, marginTop=0, height = 200, width = 800,
     data,
     xScale,
@@ -7,6 +9,7 @@ export default function OneChartCanvas({
     highres = true,
   }) {
     const canvas = document.createElement("canvas");
+    canvas.id = vendor;
     const context = canvas.getContext("2d");
     const ratio = window.devicePixelRatio || 1;
   
@@ -60,7 +63,7 @@ export default function OneChartCanvas({
       const hoveredIndex = getNearestIndex(event);
   
       if (hoveredIndex !== lastHoveredIndex)
-        canvas.dispatchEvent(new CustomEvent("circlehover", { detail: data[hoveredIndex] }));
+      canvas.dispatchEvent(new CustomEvent("circlehover", { detail: data[hoveredIndex] }));
       lastHoveredIndex = hoveredIndex;
     });
   
@@ -80,6 +83,7 @@ export default function OneChartCanvas({
          return {index: i, distance: Math.sqrt(dx * dx + dy * dy)};
       }).toSorted((a,b) => a.distance - b.distance);
   
+      if(distances[0].distance > 10) return null;
       return distances[0].index;
     }
     

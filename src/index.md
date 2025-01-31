@@ -43,16 +43,21 @@ import {runForceSimulation} from "./components/forceLayout.js"
 import OneChartCanvas from "./components/oneChartCanvas.js"
 import BotHeader from "./components/BotHeader.js"
 import QuestionsCatalog from "./components/QuestionsCatalog.js"
+import {axis, explanation, explanationTopics} from "./components/Misc.js"
 import {botLogos, sdgGoalText, sdgcolors, sdgicons} from "./components/references.js"
+import interactivity from "./components/interactivity.js"
 ```
 
-```js 
+```js DATA
 const concepts = FileAttachment("data/concepts.csv").csv({typed: true});
 const datapoints_correct_rate = await FileAttachment("data/datapoints-rates.csv").csv({typed: true});
 const question = await FileAttachment("data/entities-questions.csv").csv({typed: true});
+const model_configurationWithHuman = await FileAttachment("data/entities-mdlconfigs.csv").csv({typed: true});
 const human = question.map(m => ({question: m.question, model_configuration: "human", correct_rate: 100-(+m.human_wrong_percentage)}))
 const datapoints_ratesWithHuman = datapoints_correct_rate.concat(human);
+const questionMap = d3.rollup(question, v=>v[0], d=>d.question);
 ```
+
 ```js
 const dataWithPrecomputedForceLayoutXY = d3.rollup(
   datapoints_ratesWithHuman,
@@ -67,7 +72,9 @@ function getChartWidth(){
   return Math.min(width * 4 /5, 2000*4/5);
 }
 ```
+
 ```js
+width;
 const margin = {right: 20, left: 20, bottom: 100, top: 0};
 const xScale = d3.scaleLinear([0, 100], [margin.left, getChartWidth() - margin.right - margin.left]);
 const chartHeight = ({
@@ -80,9 +87,7 @@ const chartHeight = ({
 
 
 
-```js 
-const model_configurationWithHuman = await FileAttachment("data/entities-mdlconfigs.csv").csv({typed: true});
-```
+
 ```js 
 const rollup = d3.rollups(model_configurationWithHuman, v=>v.find(f => f["is--latest_model"])?.model_configuration, d => d.vendor)
   .filter(([_, f]) => dataWithPrecomputedForceLayoutXY.has(f));
@@ -113,10 +118,6 @@ function getSections(){
 const sections = getSections()
 ```
 
-```js
-const questionMap = d3.rollup(question, v=>v[0], d=>d.question)
-
-```
 
 ```js
 const charts = sections.map(config => ({
@@ -130,30 +131,10 @@ const charts = sections.map(config => ({
       left: margin.left, 
       ...config
     }), 
-      chart: OneChartCanvas(config)
+      chart: OneChartCanvas({questionMap, ...config})
   }))
 ```
 
-```js
-const explanation = html`<h1>AI Worldview Benchmark</h1>
-<p class="intro">We are testing if the chat bots suffer from the same misconceptions as humans. Here are the results from the ${questionMap.size} fact-questions that humans are generally wrong about.</p>
-<p class="hoverHint">Hover circles to see which question they represent →</p>`
-
-```
-
-```js
-const explanationTopics = html`<p class="hoverHint">Or browse questions by topics ↓</p>`
-```
-
-```js
-  const svg = d3.create("svg")
-    .attr("width", getChartWidth())
-    .attr("height", 25)
-  svg.append("g")
-      .call(d3.axisBottom(xScale).tickFormat(n => n + "%"));
-    const axis = svg.node();
-
-```
 
 
 ```js
@@ -161,15 +142,19 @@ const explanationTopics = html`<p class="hoverHint">Or browse questions by topic
   
   <div class="app-container" lang="en">
     <div class="info-section" style="max-height: ${chartHeight.singleChartHeight * sections.length}px;"> 
-      ${explanation}
+      ${explanation(questionMap)}
       <div class="info-question-details"></div>
     </div>
-    <div class="info-hint-topics">${explanationTopics}</div>
+    <div class="info-hint-topics">${explanationTopics()}</div>
     <div class="chart-section">
-      ${charts.map(m => html.fragment`<div class="one-chart" style="height: ${chartHeight.singleChartHeight}px;">${m.header}${m.chart.canvas}</div>`)}
+      ${charts.map(m => html.fragment`
+        <div class="one-chart" id="${m.config.vendor}" style="height: ${chartHeight.singleChartHeight}px;">
+          ${m.header}${m.chart.canvas}
+        </div>
+      `)}
       <img style="position:absolute; top:-10px; left:35%; width:60px" src="${botLogos["Chimp"].src}"/>
       <div style="position:absolute; top:5px; left:calc(35% + 70px); color:orange">Chimp level (answering by random)</div>
-      <div class="axis">${axis}</div>
+      <div class="axis">${axis(xScale, getChartWidth())}</div>
     </div>
     <div class="questions-section">
       ${QuestionsCatalog({sdgicons, question, sdgcolors})}
@@ -179,8 +164,7 @@ const explanationTopics = html`<p class="hoverHint">Or browse questions by topic
   `
 
   console.log("APP")
-  //interactivity(app, charts);
-  //return app;
+  interactivity({app, sections:charts,  sdgcolors, questionMap, sdgicons, sdgGoalText});
 ```
 
 
