@@ -1,3 +1,6 @@
+import * as d3 from "d3"; 
+
+const turkoise = "#1fa0a9";
 
 export default function OneChartCanvas({
     vendor,
@@ -27,6 +30,7 @@ export default function OneChartCanvas({
     
   
     function render(highlightSpec) {
+      console.log(data)
       context.clearRect(0, 0, width, height);
       for (const node of data) {
         const highlighted = 
@@ -48,6 +52,13 @@ export default function OneChartCanvas({
         
         context.globalAlpha = 1; // Reset opacity
       }
+      // Draw the average rectangle
+      const average = d3.mean(data, d => d.correct_rate);
+      drawDownTriangle(context, xScale(average), height/3, 15, turkoise);
+
+      // Draw middle-anchored text at (200, 200)
+      drawCenteredText(context, Math.round(average) + "%", xScale(average) + 2, height/3 - 22, "16px Arial", turkoise);
+
       // Draw the line
       context.strokeStyle = "orange"; // Line color
       context.lineWidth = 3; // Line width
@@ -96,4 +107,37 @@ export default function OneChartCanvas({
     render();
   
     return {canvas, render};
+  }
+
+
+
+  function drawCenteredText(ctx, text, x, y, font = "20px Arial", color = "black") {
+    ctx.font = font;
+    ctx.fillStyle = color;
+    ctx.textAlign = "center";   // Horizontally center the text at (x)
+    ctx.textBaseline = "middle"; // Vertically center the text at (y)
+  
+    ctx.fillText(text, x, y);
+  }
+
+  function drawDownTriangle(ctx, x, y, side, color) {
+    const height = (Math.sqrt(3) / 2) * side; // Equilateral triangle height
+  
+    // Calculate the three vertices
+    const v1 = { x: x, y: y }; // Bottom vertex
+    const v2 = { x: x - side / 2, y: y - height }; // Left vertex
+    const v3 = { x: x + side / 2, y: y - height }; // Right vertex
+  
+    // Draw the triangle
+    ctx.beginPath();
+    ctx.moveTo(v1.x, v1.y);
+    ctx.lineTo(v2.x, v2.y);
+    ctx.lineTo(v3.x, v3.y);
+    ctx.closePath();
+  
+    // Fill and stroke
+    ctx.fillStyle = color;
+    ctx.fill();
+    //ctx.strokeStyle = "none"; // Optional border
+    //ctx.stroke();
   }
