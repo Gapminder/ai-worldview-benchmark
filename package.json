@@ -10,11 +10,12 @@
   },
   "dependencies": {
     "@observablehq/framework": "^1.13.2",
-    "d3-dsv": "^3.0.1",
-    "d3-time-format": "^4.1.0"
+    "d3": "^7.9.0",
+    "htl": "^0.3.1"
   },
   "devDependencies": {
     "@vizabi/reader-ddfcsv": "^4.5.2",
+    "d3-dsv": "^3.0.1",
     "rimraf": "^5.0.5"
   },
   "engines": {

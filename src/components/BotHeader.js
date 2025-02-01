@@ -1,5 +1,5 @@
 
-import * as d3 from "npm:d3"; 
+import * as d3 from "d3"; 
 
 
 export default function BotHeader({vendor, botLogos, model_configurationWithHuman, setSelectedModel, selectedModels, dataWithPrecomputedForceLayoutXY, left=0, top=0}){
