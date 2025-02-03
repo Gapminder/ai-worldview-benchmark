@@ -12,20 +12,20 @@ const axis = (xScale, width) => {
 }
 
 
-const introVideo = await FileAttachment("./assets/intro-video-thumbnail.png").url();
-const robotIcon = await FileAttachment("./assets/robot-icon.png").url();
+const introVideo = await FileAttachment("./assets/intro-video-thumbnail.png").image();
+const robotIcon = await FileAttachment("./assets/robot-icon.png").image();
 const dateFormatter = d3.utcFormat("%B %Y");
 
 const explanation = (dsinfo = {}) => html`<h1></h1>
   <div class="title">
-    <div class="icon"><img src=${robotIcon}/></div>
+    <div class="icon"><img src=${robotIcon.src}/></div>
     <div class="h3">${dateFormatter(new Date(dsinfo.created || "2025-02-16"))} Benchmark</div>
     <div class="h1">AI Worldview</div>
     <div class="h2">79.6% CORRECT</div>
   </div>
   <p class="intro">Chatbots are still <br/> suffering from some <br/> human misconceptions</p>
   <p class="video">
-    <img src=${introVideo}/>
+    <img src=${introVideo.src}/>
   </p> 
   <p class="hoverHint">Hover circles to see which question they represent →</p>`
 
