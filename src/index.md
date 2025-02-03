@@ -46,7 +46,7 @@ import OneChartCanvas from "./components/oneChartCanvas.js"
 import BotHeader from "./components/BotHeader.js"
 import QuestionsCatalog from "./components/QuestionsCatalog.js"
 import {axis, explanation, explanationTopics} from "./components/Misc.js"
-import {botLogos, sdgGoalText, sdgcolors, sdgicons} from "./components/references.js"
+import {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng, robotIconPng} from "./components/references.js"
 import interactivity from "./components/interactivity.js"
 import promptsPopup from "./components/PropmptsPopup.js"
 ```
@@ -159,7 +159,7 @@ const charts = sections.map(config => ({
   <div class="app-container" lang="en">
 
     <div class="info-section"> 
-      <div class="info-static">${explanation(dsinfo)}</div>
+      <div class="info-static">${explanation(dsinfo, introVideoPng, robotIconPng)}</div>
       <div class="info-question-details"></div>
 
       <div class="info-hint-topics">${explanationTopics()}</div>
