@@ -1,5 +1,4 @@
 ---
-title: AI Worldview Benchmark
 toc: false
 sidebar: false
 pager: false
@@ -35,7 +34,10 @@ style: style.css
   FileAttachment("./assets/botlogos/human.png"),
   FileAttachment("./assets/botlogos/meta.png"),
   FileAttachment("./assets/botlogos/xai.png"),
-  FileAttachment("./assets/botlogos/chimp.png")
+  FileAttachment("./assets/botlogos/chimp.png"),
+
+  FileAttachment("./assets/intro-video-thumbnail.png"),
+  FileAttachment("./assets/robot-icon.png"),
 ];
 ```
 ```js
@@ -50,7 +52,8 @@ import promptsPopup from "./components/PropmptsPopup.js"
 ```
 
 ```js DATA
-const concepts = FileAttachment("data/concepts.csv").csv({typed: true});
+const dsinfo = await FileAttachment("data/dataset-info.json").json();
+const concepts = await FileAttachment("data/concepts.csv").csv({typed: true});
 const datapoints_correct_rate = await FileAttachment("data/datapoints-rates.csv").csv({typed: true});
 const question = await FileAttachment("data/entities-questions.csv").csv({typed: true});
 const model_configurationWithHuman = await FileAttachment("data/entities-mdlconfigs.csv").csv({typed: true});
@@ -77,30 +80,24 @@ const dataWithPrecomputedForceLayoutXY = d3.rollup(
 
 ```js
 function getChartWidth(){
+  if (width / 5 <= 250)
+    return width - 250;
   return Math.min(width * 4 /5, 2000*4/5);
 }
 ```
 
 ```js
-width;
-const margin = {right: 20, left: 20, bottom: 100, top: 0};
+const paddingTop = 20;
+const margin = {right: 40, left: 20, top: 20, axis: 25};
 const xScale = d3.scaleLinear([0, 100], [margin.left, getChartWidth() - margin.right - margin.left]);
-const chartHeight = ({
-    canvasHeight: (innerHeight-200)/7 + 50,
-    singleChartHeight: (innerHeight-200)/7,
-    headerShiftHeight: 30
-});
+const canvasOverflow = 50;
+const singleChartHeight = (window.innerHeight - margin.axis - margin.top - paddingTop)/7 - 1;
+const headerShiftHeight = 0;
 ```
 
-
-
-
-
-```js 
+```js
 const rollup = d3.rollups(model_configurationWithHuman, v=>v.find(f => f["is--latest_model"])?.model_configuration, d => d.vendor)
   .filter(([_, f]) => dataWithPrecomputedForceLayoutXY.has(f));
-```
-```js
 const selectedModels = Mutable(Object.fromEntries(rollup));
 const setSelectedModel = (vendor, model)=>{
   const newSelectedModels = Object.assign({}, selectedModels.value, {[vendor]: model});
@@ -110,23 +107,23 @@ const setSelectedModel = (vendor, model)=>{
 
 ```js 
 function getSections(){
-  const height = chartHeight.canvasHeight;
+  const height = singleChartHeight;
   const width = getChartWidth();
-  const marginTop = 0;
-  const marginBottom = chartHeight.canvasHeight - chartHeight.singleChartHeight;
   function getData(vendor) {
     return dataWithPrecomputedForceLayoutXY.get(selectedModels[vendor])
   }
 
-  const fill = (d) => sdgcolors[questionMap.get(d.question).sdg_world_topics]
+  const fill = (d) => sdgcolors[questionMap.get(d.question).sdg_world_topics];
   return [
-    {fill, xScale, vendor: "OpenAI", data: getData("OpenAI"), height, width, marginTop: margin.top, marginBottom},
-    {fill, xScale, vendor: "Anthropic", data: getData("Anthropic"), height, width, marginTop, marginBottom},
-    {fill, xScale, vendor: "Google", data: getData("Google"), height, width, marginTop, marginBottom},
-    {fill, xScale, vendor: "Alibaba", data: getData("Alibaba"), height, width, marginTop, marginBottom},
-    {fill, xScale, vendor: "Meta", data: getData("Meta"), height, width, marginTop, marginBottom},
-    {fill, xScale, vendor: "XAI", data: getData("XAI"), height, width, marginTop, marginBottom},
-    {fill, xScale, vendor: "Human", data: getData("Human"), height, width, marginTop, marginBottom: margin.bottom}
+    {fill, xScale, width, canvasOverflow, vendor: "Human", data: getData("Human"), averageMarkColor: "#333",
+      height: height + margin.axis + margin.top, marginTop: margin.top, marginBottom: margin.axis
+    },
+    {fill, xScale, width, canvasOverflow, vendor: "Anthropic", data: getData("Anthropic"), height, spellOutAverage: true},
+    {fill, xScale, width, canvasOverflow, vendor: "OpenAI", data: getData("OpenAI"), height},
+    {fill, xScale, width, canvasOverflow, vendor: "Google", data: getData("Google"), height},
+    {fill, xScale, width, canvasOverflow, vendor: "Alibaba", data: getData("Alibaba"), height},
+    {fill, xScale, width, canvasOverflow, vendor: "Meta", data: getData("Meta"), height},
+    {fill, xScale, width, canvasOverflow, vendor: "XAI", data: getData("XAI"), height},
   ]
 }
 const sections = getSections()
@@ -142,7 +139,7 @@ const charts = sections.map(config => ({
       setSelectedModel,
       model_configurationWithHuman, 
       dataWithPrecomputedForceLayoutXY, 
-      top: chartHeight.headerShiftHeight, 
+      top: headerShiftHeight, 
       left: margin.left, 
       ...config
     }), 
@@ -153,28 +150,37 @@ const charts = sections.map(config => ({
 
 
 ```js
+  const chimpText = "Monkeys score 33% on ABC questions, and humans score worse than that on most of these questions"
   const app = html`
   
   <div class="app-container" lang="en">
-    <div class="info-section" style="max-height: ${chartHeight.singleChartHeight * sections.length}px;"> 
-      ${explanation(questionMap)}
+
+    <div class="info-section"> 
+      <div class="info-static">${explanation(dsinfo)}</div>
       <div class="info-question-details"></div>
+
+      <div class="info-hint-topics">${explanationTopics()}</div>
+      <div class="questions-section">${QuestionsCatalog({sdgicons, question, sdgcolors})}</div>
+      <div class="info-menu">
+        <div class="info-menu-item">▶️ <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" target="_blank">How to use...</a></div>
+        <div class="info-menu-item">ℹ️ <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" target="_blank">More info and method</a></div>
+      </div>
     </div>
-    <div class="info-hint-topics">${explanationTopics()}</div>
+
     <div class="chart-section">
+      <div style="position:absolute; top:${singleChartHeight + paddingTop}px; left:0;" class="xaxis">${axis(xScale, getChartWidth())}</div>
+      <div style="position:absolute; top:${singleChartHeight}px; right:${margin.right}px;" class="xaxistext">CORRECT ANSWERS</div>
       ${charts.map(m => html.fragment`
-        <div class="one-chart" id="${m.config.vendor}" style="height: ${chartHeight.singleChartHeight}px;">
-          ${m.header}${m.chart.canvas}
+        <div class="one-chart" id="${m.config.vendor}" style="height: ${m.config.height}px;">
+          ${m.chart.canvas}${m.header}
         </div>
       `)}
-      <img style="position:absolute; top:-10px; left:35%; width:60px" src="${botLogos["Chimp"].src}"/>
-      <div style="position:absolute; top:5px; left:calc(35% + 70px); color:orange">Chimp level (answering by random)</div>
-      <div class="axis">${axis(xScale, getChartWidth())}</div>
+      <img style="position:absolute; top:${paddingTop - 20}px; left:35%; width:60px" src="${botLogos["Chimp"].src}"/>
+      <div style="position:absolute; top:${paddingTop}px; left:calc(35% + 70px); color:orange">${chimpText}</div>
     </div>
-    <div class="questions-section">
-      ${QuestionsCatalog({sdgicons, question, sdgcolors})}
-    </div>
+
     <div class="prompts-popup-flexbox"><div class="prompts-popup"></div></div>
+
   </div>
   `
 

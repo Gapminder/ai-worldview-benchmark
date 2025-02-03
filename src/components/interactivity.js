@@ -21,7 +21,9 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sd
     DOM.qDetails = DOM.container.select(".info-question-details");
     DOM.hints = DOM.container.selectAll(".hoverHint");
     DOM.intro = DOM.container.selectAll(".intro");
+    DOM.video = DOM.container.selectAll(".video");
     DOM.promptsPopup = DOM.container.select(".prompts-popup");
+    DOM.charts = DOM.container.selectAll(".one-chart");
   
     DOM.questionsSection
       .on("mouseleave", (event, d) => highlight(null));
@@ -39,19 +41,30 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sd
           model: promptsPopup.getState.model || defaultModel,
             })
       });
+
+    DOM.charts
+      .on("mouseleave", function(event, d) {
+        highlight(null);
+        d3.select(this).select("select").style("opacity",0.5);
+      })
+      .on("mouseenter", function(event, d) {
+        d3.select(this).select("select").style("opacity",1);
+      });
   
     sections.forEach(section => {
       const data = section.config.data;
+      d3.selection.chart
       d3.select(section.chart.canvas)
-        .on("mouseleave", (event, d) => highlight(null))
         .on("circlehover", (event, i) => highlight( event?.detail?.question ? {question: event.detail.question} : null ))
         .on("circleclick", (event, i) => {
-  
-        promptsPopup.update({
-              view: DOM.promptsPopup, 
-              show: true, 
-              question: event?.detail?.question, 
-              model: event?.detail?.model_configuration
+
+          if (!event?.detail) return;
+
+          promptsPopup.update({
+            view: DOM.promptsPopup, 
+            show: true, 
+            question: event?.detail?.question, 
+            model: event?.detail?.model_configuration
             })
           
         });
@@ -83,6 +96,7 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sd
         DOM.qDetails.select("h2").style("color", sdgcolors[spec.goal]);
         DOM.hints.style("display", "none");
         DOM.intro.style("display", "none");
+        DOM.video.style("display", "none");
       }
       if(spec && spec.question) {
         const text = questionMap.get(spec.question);
@@ -116,10 +130,12 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sd
         DOM.qDetails.select("h2").style("color", sdgcolors[goal]);
         DOM.hints.style("display", "none");
         DOM.intro.style("display", "none");
+        DOM.video.style("display", "none");
       }
       if(!spec) {
         DOM.hints.style("display", "block");
         DOM.intro.style("display", "block");
+        DOM.video.style("display", "block");
         DOM.qDetails.text("");
       }
     }

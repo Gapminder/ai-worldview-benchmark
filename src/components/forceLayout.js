@@ -7,7 +7,7 @@ function forceLayout({
     r = (d) => d.r || 3,
     xScale = d3.scaleLinear([0, 100], [0, 500]),
     gap = 1,
-    xStrength = 0.9,
+    xStrength = 0.8,
     yStrength = 0.02,
   }) {
     

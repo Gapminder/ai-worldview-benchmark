@@ -1,26 +1,33 @@
 import * as d3 from "d3"; 
 
 const turkoise = "#1fa0a9";
+const opacityDim = 0.3;
 
 export default function OneChartCanvas({
     vendor,
     questionMap,
     marginBottom = 0, marginTop=0, height = 200, width = 800,
+    canvasOverflow,
     data,
     xScale,
     fill = () => "#ba11ad",
+    averageMarkColor = turkoise,
     highres = true,
+    spellOutAverage = false,
   }) {
     const canvas = document.createElement("canvas");
     canvas.id = vendor;
     const context = canvas.getContext("2d");
     const ratio = window.devicePixelRatio || 1;
+    height = height + canvasOverflow;
+    const heightMinusMargins = height - marginBottom - marginTop;
   
     if (highres) {
       canvas.width = width * ratio;
       canvas.height = height * ratio;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
+      canvas.style.top = `-${canvasOverflow/2}px`;
       context.scale(ratio, ratio);
     } else {
       canvas.width = width;
@@ -30,17 +37,22 @@ export default function OneChartCanvas({
     
   
     function render(highlightSpec) {
-      console.log(data)
+
       context.clearRect(0, 0, width, height);
+
       for (const node of data) {
         const highlighted = 
           highlightSpec && highlightSpec.goal === questionMap.get(node.question).sdg_world_topics 
           || highlightSpec && highlightSpec.question === node.question;
   
+        const radius = highlightSpec && highlighted ? 7 : node.r;
+        const alpha = highlightSpec && !highlighted ? opacityDim : 1; // Change opacity if highlighted
+        const shift = heightMinusMargins/2 + marginTop;
+
         context.beginPath();
-        context.arc(node.x, node.y + height/2, highlighted ? 7 : node.r, 0, 2 * Math.PI);
+        context.arc(node.x, node.y + shift, radius, 0, 2 * Math.PI);
         context.fillStyle = fill(node);
-        context.globalAlpha = highlightSpec && !highlighted ? 0.1 : 1; // Change opacity if highlighted
+        context.globalAlpha = alpha
         context.fill();
   
         // Add a stroke
@@ -52,19 +64,32 @@ export default function OneChartCanvas({
         
         context.globalAlpha = 1; // Reset opacity
       }
+
+      for (const node of data) {
+        const shift = heightMinusMargins/2 + marginTop;
+
+        if (highlightSpec && highlightSpec.question === node.question) {
+          drawCenteredText(context, Math.round(node.correct_rate) + "%", xScale(node.correct_rate) + 2, node.y + shift + 20, "bold 16px Arial", "black");
+        }
+      }
+
       // Draw the average rectangle
       const average = d3.mean(data, d => d.correct_rate);
-      drawDownTriangle(context, xScale(average), height/3, 15, turkoise);
+      drawDownTriangle(context, xScale(average), height/3 - marginTop, 15, averageMarkColor);
 
       // Draw middle-anchored text at (200, 200)
-      drawCenteredText(context, Math.round(average) + "%", xScale(average) + 2, height/3 - 22, "16px Arial", turkoise);
+      drawCenteredText(context, Math.round(average) + "%", xScale(average) + 2, height/3 - 22 - marginTop, "16px Arial", averageMarkColor);
 
-      // Draw the line
+      // Draw middle-anchored text at (200, 200)
+      if (spellOutAverage)
+        drawCenteredText(context, "Average", xScale(average), height/3 - 22 - marginTop - 16, "16px Arial", averageMarkColor);
+
+      // Draw the chimp line
       context.strokeStyle = "orange"; // Line color
       context.lineWidth = 3; // Line width
       context.beginPath();
       context.moveTo(xScale(33.3), marginTop); // Starting point (x1, y1)
-      context.lineTo(xScale(33.3), height - marginBottom - marginTop); // Ending point (x2, y2)
+      context.lineTo(xScale(33.3), height); // Ending point (x2, y2)
       context.stroke(); // Render the line
     }
   
@@ -111,12 +136,17 @@ export default function OneChartCanvas({
 
 
 
-  function drawCenteredText(ctx, text, x, y, font = "20px Arial", color = "black") {
+  function drawCenteredText(ctx, text, x, y, font = "20px Arial", color = "black", strokeColor = "white", strokeWidth = 4) {
     ctx.font = font;
     ctx.fillStyle = color;
     ctx.textAlign = "center";   // Horizontally center the text at (x)
     ctx.textBaseline = "middle"; // Vertically center the text at (y)
   
+    // Set stroke properties
+    ctx.lineWidth = strokeWidth;
+    ctx.strokeStyle = strokeColor;
+    ctx.strokeText(text, x, y); // Draw outline
+
     ctx.fillText(text, x, y);
   }
 
