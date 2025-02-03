@@ -53,12 +53,15 @@ import promptsPopup from "./components/PropmptsPopup.js"
 
 ```js DATA
 const dsinfo = await FileAttachment("data/dataset-info.json").json();
-const concepts = await FileAttachment("data/concepts.csv").csv({typed: true});
-const datapoints_correct_rate = await FileAttachment("data/datapoints-rates.csv").csv({typed: true});
-const question = await FileAttachment("data/entities-questions.csv").csv({typed: true});
-const model_configurationWithHuman = await FileAttachment("data/entities-mdlconfigs.csv").csv({typed: true});
-const datapoints_prompts = await FileAttachment("data/datapoints-prompts.csv").csv({typed: true});
-const prompt_variations = await FileAttachment("data/entities-promptvars.csv").csv({typed: true});
+
+const zip = FileAttachment("data/aiwb-dataset.zip").zip();
+const datapoints_prompts = await zip.then((zip) => zip.file("datapoints-prompts.csv").csv({typed: true}));
+const datapoints_correct_rate = await zip.then((zip) => zip.file("datapoints-rates.csv").csv({typed: true}));
+
+const question = await zip.then((zip) => zip.file("entities-questions.csv").csv({typed: true}));
+const model_configurationWithHuman = await zip.then((zip) => zip.file("entities-mdlconfigs.csv").csv({typed: true}));
+const prompt_variations = await zip.then((zip) => zip.file("entities-promptvars.csv").csv({typed: true}));
+
 const promptsMap = d3.rollup(prompt_variations, v=>v[0].question_prompt_template, d=>d.prompt_variation);
 
 const datapoints_prompt_variationMap = d3.group(datapoints_prompts, d => d.model_configuration, d=>d.question)
