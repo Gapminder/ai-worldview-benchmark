@@ -9,9 +9,7 @@
     "observable": "observable"
   },
   "dependencies": {
-    "@observablehq/framework": "^1.13.2",
-    "d3": "^7.9.0",
-    "htl": "^0.3.1"
+    "@observablehq/framework": "^1.13.2"
   },
   "devDependencies": {
     "@vizabi/reader-ddfcsv": "^4.5.2",

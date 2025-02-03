@@ -1,4 +1,4 @@
-import * as d3 from "d3"; 
+import * as d3 from "npm:d3";
 
 
 export default function interactivity({app, sections, sdgcolors, questionMap, sdgGoalText, selectedModels, sdgicons, promptsPopup}){

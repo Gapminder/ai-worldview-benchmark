@@ -1,6 +1,6 @@
-import {html} from "htl";
+import {html} from "npm:htl";
 import { FileAttachment } from "@observablehq/stdlib";
-import * as d3 from "d3"; 
+import * as d3 from "npm:d3";
 
 const axis = (xScale, width) => {
   const svg = d3.create("svg")
