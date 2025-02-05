@@ -1,5 +1,5 @@
 import * as d3 from "npm:d3";
- 
+  
 
 export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, model_configurationWithHuman, selectedModels, questionMap, datapoints_prompt_variationMap, promptsMap}){
     let inner_question;

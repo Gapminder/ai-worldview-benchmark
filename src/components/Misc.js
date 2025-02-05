@@ -1,6 +1,6 @@
 import {html} from "npm:htl";
 import * as d3 from "npm:d3";
- 
+  
 const axis = (xScale, width) => {
   const svg = d3.create("svg")
     .attr("width", `${width}px`)
