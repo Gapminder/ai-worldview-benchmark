@@ -151,6 +151,14 @@ const charts = sections.map(config => ({
   }))
 ```
 
+```js
+const docid = "1tR6y3LW1wDXqOK1ZK5teBY0c6XIhJOYhfLud4Hgk69M";
+const sheet = "Sheet2";
+const shortQuestionNames = await d3.csv(`https://docs.google.com/spreadsheets/d/${docid}/gviz/tq?tqx=out:csv&sheet=${sheet}`)
+const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.q_contentful_id, m["Short Title"]])));
+
+console.log(questionMap, shortQNamesMap)
+```
 
 
 ```js
@@ -192,7 +200,7 @@ const charts = sections.map(config => ({
 
 ```js
   const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
-  interactivity({app, sections:charts,  sdgcolors, questionMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp});
+  interactivity({app, sections:charts,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp});
 ```
 
 

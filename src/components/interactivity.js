@@ -1,7 +1,7 @@
 import * as d3 from "npm:d3";
   
 
-export default function interactivity({app, sections, sdgcolors, questionMap, sdgGoalText, selectedModels, sdgicons, promptsPopup}){
+export default function interactivity({app, sections, sdgcolors, questionMap, shortQNamesMap, sdgGoalText, selectedModels, sdgicons, promptsPopup}){
 
     function toSentenceCase(str) {
       if (!str) return str; // Handle empty or null strings
@@ -100,6 +100,7 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sd
       }
       if(spec && spec.question) {
         const text = questionMap.get(spec.question);
+        const shortText = shortQNamesMap.get(spec.question);
         const goal = text.sdg_world_topics;
         function getCorrectnessClassName(num){
           if (num == 1) return "correct";
@@ -113,8 +114,8 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sd
         }
         DOM.qDetails.html(`
           <div class="info-image"></div>
-          <h2>${sdgGoalText[goal].title}</h2>
-          <h2>Question ${spec.question}</h2>
+          <p>${sdgGoalText[goal].title}, Question ${spec.question}</p>
+          <h2>${shortText}</h2>
           <p>${text.published_version_of_question || "The question probably had images in it, this app doesn't support it yet"}</p>
           <p><span class="${getCorrectnessClassName(text.option_a_correctness)}">
             ${getCorrectnessText(text.option_a_correctness)}

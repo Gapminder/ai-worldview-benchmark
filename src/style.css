@@ -5,7 +5,11 @@
   --font-tiny: 14px;
 }
 
-body {margin: 0}
+html, body {
+  height: 100vh; /* Ensures the page does not exceed the viewport height */
+  overflow: hidden; /* Prevents the page from scrolling unexpectedly */
+  margin: 0; /* Removes default margins */
+}
 
 .app-container{
   font-family: sans-serif;
@@ -16,6 +20,7 @@ body {margin: 0}
   row-gap: 20px;
   width: 100%;
   height: 100%;
+  max-height: 100vh;
   max-width: 2000px;
   margin: auto;
 } 
@@ -123,6 +128,8 @@ to {
   grid-column-start: 1; grid-column-end: 2;    
   width: 100%;
   height: 100%;
+  max-height: 100vh; /* SUPPOSEDLY Prevents it from growing beyond its parent */
+  min-height: 100vh; /* SUPPOSEDLY Fixes flexbox behavior where children may force parent to expand */
   overflow: hidden;
   padding-left: 10px;
   hyphens: auto;
@@ -198,6 +205,7 @@ to {
   flex: none;
 }
 .info-menu {
+  flex: none;
   margin-top: 10px;
   margin-bottom: 10px;
 } .info-menu a {
@@ -207,9 +215,14 @@ to {
 .info-question-details {
   flex-grow: 1; 
   overflow: auto;
+  min-height: 0; /* SUPPOSEDLY Ensures the child respects parent's boundaries */
   margin-top: 30px;
   font-size: var(--font-medium);
-
+}
+.info-question-details p,
+.info-question-details h2 {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
 }
 .correct {
   font-weight: bold;
