@@ -1,6 +1,6 @@
 import {html} from "npm:htl";
 import * as d3 from "npm:d3";
-
+ 
 export default function QuestionsCatalog({
     sdgicons,
     sdgcolors,
