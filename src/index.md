@@ -154,8 +154,8 @@ const charts = sections.map(config => ({
 ```js
 const docid = "1tR6y3LW1wDXqOK1ZK5teBY0c6XIhJOYhfLud4Hgk69M";
 const sheet = "Sheet2";
-const shortQuestionNames = await d3.csv(`https://docs.google.com/spreadsheets/d/${docid}/gviz/tq?tqx=out:csv&sheet=${sheet}`)
-const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.q_contentful_id, m["Short Title"]])));
+const shortQuestionNames = await d3.csv(`https://docs.google.com/spreadsheets/d/${docid}/gviz/tq?tqx=out:csv&sheet=${sheet}&cache=${new Date()}`)
+const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_title"]])));
 
 console.log(questionMap, shortQNamesMap)
 ```
