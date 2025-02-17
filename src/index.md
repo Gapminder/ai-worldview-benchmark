@@ -34,6 +34,7 @@ style: style.css
   FileAttachment("./assets/botlogos/human.png"),
   FileAttachment("./assets/botlogos/meta.png"),
   FileAttachment("./assets/botlogos/xai.png"),
+  FileAttachment("./assets/botlogos/deepseek.png"),
   FileAttachment("./assets/botlogos/chimp.png"),
 
   FileAttachment("./assets/intro-video-thumbnail.png"),
@@ -63,6 +64,8 @@ const model_configurationWithHumanMap = d3.rollup(model_configurationWithHuman, 
 const human = question.map(m => ({question: m.question, model_configuration: "human", correct_rate: 100-(+m.human_wrong_percentage)}))
 const datapoints_ratesWithHuman = datapoints_correct_rate.concat(human);
 const questionMap = d3.rollup(question, v=>v[0], d=>d.question);
+
+console.log(model_configurationWithHumanMap)
 ```
 
 ```js
@@ -91,11 +94,12 @@ function getChartWidth(){
 ```
 
 ```js
+const nLanes = 8;
 const paddingTop = 20;
 const margin = {right: 40, left: 20, top: 20, axis: 25};
 const xScale = d3.scaleLinear([0, 100], [margin.left, getChartWidth() - margin.right - margin.left]);
 const canvasOverflow = 50;
-const singleChartHeight = (window.innerHeight - margin.axis - margin.top - paddingTop)/7 - 1;
+const singleChartHeight = (window.innerHeight - margin.axis - margin.top - paddingTop)/nLanes - 1;
 const headerShiftHeight = 0;
 ```
 
@@ -125,8 +129,9 @@ function getSections(){
     {fill, xScale, width, canvasOverflow, vendor: "Anthropic", data: getData("Anthropic"), height, spellOutAverage: true},
     {fill, xScale, width, canvasOverflow, vendor: "OpenAI", data: getData("OpenAI"), height},
     {fill, xScale, width, canvasOverflow, vendor: "Google", data: getData("Google"), height},
-    {fill, xScale, width, canvasOverflow, vendor: "Alibaba", data: getData("Alibaba"), height},
+    {fill, xScale, width, canvasOverflow, vendor: "DeepSeek", data: getData("DeepSeek"), height},
     {fill, xScale, width, canvasOverflow, vendor: "Meta", data: getData("Meta"), height},
+    {fill, xScale, width, canvasOverflow, vendor: "Alibaba", data: getData("Alibaba"), height},
     {fill, xScale, width, canvasOverflow, vendor: "XAI", data: getData("XAI"), height},
   ]
 }
