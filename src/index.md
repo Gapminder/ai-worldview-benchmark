@@ -134,6 +134,7 @@ function getSections(){
   const fill = (d) => sdgcolors[questionMap.get(d.question).sdg_world_topics];
   return [
     {fill, xScale, width, canvasOverflow, vendor: "Humans", data: getData("Humans"), averageMarkColor: "#333",
+      chimpLine: true,
       height: height + margin.axis + margin.top, marginTop: margin.top, marginBottom: margin.axis
     },
     {fill, xScale, width, canvasOverflow, vendor: "Anthropic", data: getData("Anthropic"), height, spellOutAverage: true},
@@ -176,7 +177,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
 
 
 ```js
-  const chimpText = "Monkeys score 33% on ABC questions, and humans score worse than that on most of these questions"
+  const chimpText = "Monkeys would score 33% on our ABC questions, and humans do worse"
   const app = html`
   
   <div class="app-container" lang="en">

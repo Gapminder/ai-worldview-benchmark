@@ -14,6 +14,7 @@ export default function OneChartCanvas({
     averageMarkColor = turkoise,
     highres = true,
     spellOutAverage = false,
+    chimpLine = false,
   }) {
     const canvas = document.createElement("canvas");
     canvas.id = vendor;
@@ -85,12 +86,14 @@ export default function OneChartCanvas({
         drawCenteredText(context, "Average", xScale(average), height/3 - 22 - marginTop - 16, "16px Arial", averageMarkColor);
 
       // Draw the chimp line
-      context.strokeStyle = "orange"; // Line color
-      context.lineWidth = 3; // Line width
-      context.beginPath();
-      context.moveTo(xScale(33.3), marginTop); // Starting point (x1, y1)
-      context.lineTo(xScale(33.3), height); // Ending point (x2, y2)
-      context.stroke(); // Render the line
+      if (chimpLine) {
+        context.strokeStyle = "orange"; // Line color
+        context.lineWidth = 3; // Line width
+        context.beginPath();
+        context.moveTo(xScale(33.3), marginTop); // Starting point (x1, y1)
+        context.lineTo(xScale(33.3), heightMinusMargins); // Ending point (x2, y2)
+        context.stroke(); // Render the line
+      }
     }
   
       // Add interactivity
