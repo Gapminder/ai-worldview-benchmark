@@ -112,8 +112,8 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
           if (num == 2) return "Wrong answer:";
           if (num == 3) return "Very wrong answer:";
         }
+        //<div class="info-image"></div>
         DOM.qDetails.html(`
-          <div class="info-image"></div>
           <p>${sdgGoalText[goal].title}, Question ${spec.question}</p>
           <h2>${shortText}</h2>
           <p>${text.published_version_of_question || "The question probably had images in it, this app doesn't support it yet"}</p>
@@ -127,7 +127,7 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
             ${getCorrectnessText(text.option_c_correctness)}
           </span><br/>C. ${text.option_c}</p>
         `);
-        DOM.qDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
+        //DOM.qDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
         DOM.qDetails.select("h2").style("color", sdgcolors[goal]);
         DOM.hints.style("display", "none");
         DOM.intro.style("display", "none");

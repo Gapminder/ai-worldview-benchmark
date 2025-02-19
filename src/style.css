@@ -140,7 +140,7 @@ to {
 .info-static {
   flex: none;
 }
-.info-static .title{
+.info-static .title, .info-static .intro {
   width: 100%;
 }
 .info-static text{
@@ -179,7 +179,6 @@ to {
   height: 20px;
   position: relative;
   top: 0.2em;
-  stroke: #aaa;
   fill: #aaa;
   cursor: pointer;
 } 
@@ -189,18 +188,17 @@ to {
   text-decoration: none;
 }
 .info-menu-item:hover a {color: blue;  text-decoration: underline;}
-.info-menu-item:hover svg {fill: blue; stroke: blue;}
+.info-menu-item:hover svg {fill: blue; }
 .info-question-details {
   flex-grow: 1; 
   overflow: auto;
   min-height: 0; /* SUPPOSEDLY Ensures the child respects parent's boundaries */
-  margin-top: 30px;
   font-size: var(--font-medium);
 }
 .info-question-details p,
 .info-question-details h2 {
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 .correct {
   font-weight: bold;
