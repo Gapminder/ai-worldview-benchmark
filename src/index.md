@@ -38,6 +38,8 @@ style: style.css
   FileAttachment("./assets/botlogos/chimp.png"),
 
   FileAttachment("./assets/intro-video-thumbnail.png"),
+  FileAttachment("./assets/question.svg"),
+  FileAttachment("./assets/info.svg"),
 ];
 ```
 ```js
@@ -45,8 +47,8 @@ import {runForceSimulation} from "./components/forceLayout.js"
 import OneChartCanvas from "./components/oneChartCanvas.js"
 import BotHeader from "./components/BotHeader.js"
 import QuestionsCatalog from "./components/QuestionsCatalog.js"
-import {axis, explanation, explanationTopics} from "./components/Misc.js"
-import {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng} from "./components/references.js"
+import {axis, explanation, explanationTopics, infoMenu} from "./components/Misc.js"
+import {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng, questionSvg, infoSvg} from "./components/references.js"
 import interactivity from "./components/interactivity.js"
 import promptsPopup from "./components/PropmptsPopup.js"
 ```
@@ -177,10 +179,7 @@ console.log(questionMap, shortQNamesMap)
 
       <div class="info-hint-topics">${explanationTopics()}</div>
       <div class="questions-section">${QuestionsCatalog({sdgicons, question, sdgcolors})}</div>
-      <div class="info-menu">
-        <div class="info-menu-item">▶️ <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" target="_blank">How to use...</a></div>
-        <div class="info-menu-item">ℹ️ <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" target="_blank">More info and method</a></div>
-      </div>
+      <div class="info-menu">${infoMenu({questionSvg, infoSvg})}</div>
     </div>
 
     <div class="chart-section">

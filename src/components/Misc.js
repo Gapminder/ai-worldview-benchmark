@@ -34,4 +34,25 @@ const explanation = (dsinfo = {}, introVideoPng) => html`<h1></h1>
 const explanationTopics = () => html`<p class="colorlegend">Color: UN Goals</p>`
 
 
-export {axis, explanation, explanationTopics}
+const infoMenu = ({questionSvg, infoSvg}) => {
+  const parser = new DOMParser();
+  const doc1 = parser.parseFromString(questionSvg, "image/svg+xml");
+  const questionSvgParsed = doc1.documentElement; // <svg> root
+
+  const doc2 = parser.parseFromString(infoSvg, "image/svg+xml");
+  const infoSvgParsed = doc2.documentElement; // <svg> root
+
+
+  return html`
+    <div class="info-menu-item">
+      ${questionSvgParsed}
+      <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" target="_blank">How to use...</a>
+    </div>
+    <div class="info-menu-item">
+      ${infoSvgParsed}
+      <a href="https://www.gapminder.org/aiwb_method/" target="_blank">More info and method...</a>
+    </div>
+  `;
+};
+
+export {axis, explanation, explanationTopics, infoMenu}

@@ -175,10 +175,22 @@ to {
   flex: none;
   margin-top: 10px;
   margin-bottom: 10px;
-} .info-menu a {
-  font-size: var(--font-medium);
-  color: grey;
 }
+.info-menu-item svg {
+  height: 20px;
+  position: relative;
+  top: 0.2em;
+  stroke: #aaa;
+  fill: #aaa;
+  cursor: pointer;
+} 
+.info-menu-item a {
+  font-size: var(--font-small);
+  color: #aaa;
+  text-decoration: none;
+}
+.info-menu-item:hover a {color: blue;  text-decoration: underline;}
+.info-menu-item:hover svg {fill: blue; stroke: blue;}
 .info-question-details {
   flex-grow: 1; 
   overflow: auto;
