@@ -109,24 +109,24 @@ const sdgGoalText = ({
 })
 
 const sdgicons = Promise.all([
-  FileAttachment("./assets/sdgicons/GOAL_1.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_2.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_3.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_4.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_5.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_6.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_7.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_8.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_9.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_10.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_11.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_12.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_13.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_14.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_15.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_16.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_17.svg").image(),
-  FileAttachment("./assets/sdgicons/GOAL_other.svg").image(),
+  FileAttachment("./assets/sdgicons/GOAL_01.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_02.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_03.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_04.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_05.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_06.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_07.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_08.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_09.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_10.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_11.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_12.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_13.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_14.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_15.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_16.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_17.png").image(),
+  FileAttachment("./assets/sdgicons/GOAL_other.png").image(),
 ]).then(r => 
   r.map((m,i)=>({
     goal: i===17 ? "other" : "sdg-world-" + String(i+1).padStart(2, "0"),
@@ -155,7 +155,7 @@ const sdgcolors = ({
   "sdg-world-15": "#56C02B",
   "sdg-world-16": "#00689D",
   "sdg-world-17": "#19486A",
-  "other": "#555",
+  "other": "#ffdb69",
   })
 
 export {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng, robotIconPng}

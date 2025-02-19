@@ -201,6 +201,9 @@ to {
   height: 50px;
   margin-bottom: 10px;
 }
+.info-image img {
+  width: 100%;
+}
 .info-hint-topics {
   flex: none;
 }
@@ -316,6 +319,9 @@ canvas {
   margin: 2px; 
   box-sizing: border-box; 
   cursor: pointer;
+}
+.question-icon img {
+  width: 100%;
 }
 .questions-section .question-icon-container {
   display: flex;

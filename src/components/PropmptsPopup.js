@@ -97,7 +97,6 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
       view.append("img").attr("src", botLogos[vendor].src)
         .style("width", "40px")
         .style("height", "40px")
-        
         .style("position", "relative")
         .style("top", "9px")
         .style("margin-right", "5px")
@@ -106,14 +105,13 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
     
       view.append("h1").style("display", "inline-block").style("margin-right", "10px").style("margin-left", "10px").text("–vs–");
       
-      view.append("div")
-        .style("display", "inline-block")
-        .html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
+      view.append("img").attr("src", sdgicons.find(f => f.goal===goal).image.src)
         .style("width", "40px")
         .style("height", "40px")
         .style("position", "relative")
         .style("top", "9px")
         .style("margin-right", "5px")
+        .style("display", "inline-block");
         
     
       view.append("h1")
