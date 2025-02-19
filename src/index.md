@@ -66,7 +66,6 @@ const human = question.map(m => ({question: m.question, model_configuration: "hu
 const datapoints_ratesWithHuman = datapoints_correct_rate.concat(human);
 const questionMap = d3.rollup(question, v=>v[0], d=>d.question);
 
-console.log(model_configurationWithHumanMap)
 ```
 
 ```js
@@ -163,7 +162,6 @@ const sheet = "Sheet2";
 const shortQuestionNames = await d3.csv(`https://docs.google.com/spreadsheets/d/${docid}/gviz/tq?tqx=out:csv&sheet=${sheet}&cache=${new Date()}`)
 const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_title"]])));
 
-console.log(questionMap, shortQNamesMap)
 ```
 
 
