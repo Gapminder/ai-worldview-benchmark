@@ -1,5 +1,7 @@
 import {html} from "npm:htl";
 import * as d3 from "npm:d3";
+
+const UPGRADER_LINK = "https://upgrader.gapminder.org/t/";
   
 export default function QuestionsCatalog({
     sdgicons,
@@ -14,6 +16,10 @@ export default function QuestionsCatalog({
       .data(sdgicons)
       .join("div")
       .attr("class", "question-icon")
+      .append("a")
+      .style("pointer-events", d => d.goal === "other" ? "none" : null)
+      .attr("href", d => UPGRADER_LINK + d.goal)
+      .attr("target", "_blank")
       .append(d => d.image)
   
     // const questionPiles = d3.create("div");
