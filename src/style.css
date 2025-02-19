@@ -1,3 +1,7 @@
+@import url("prompts-popup.css");
+@import url("bot-header.css");
+@import url("questions-catalog.css");
+
 :root{
   --font-large: 26px;
   --font-medium: 20px;
@@ -5,9 +9,22 @@
   --font-tiny: 14px;
 }
 
+.correct {
+  font-weight: bold;
+  color: darkgreen;
+}
+.wrong {
+  font-weight: bold;
+  color: orange;
+}
+.verywrong {
+  font-weight: bold;
+  color: red;
+}
+
 html, body {
   height: 100vh; /* Ensures the page does not exceed the viewport height */
-  overflow: hidden; /* Prevents the page from scrolling unexpectedly */
+  /* overflow: hidden; /* Prevents the page from scrolling unexpectedly */
   margin: 0; /* Removes default margins */
 }
 
@@ -16,6 +33,9 @@ html, body {
   display:grid;
   grid-template-rows: auto;
   grid-template-columns: minmax(250px, 20%) auto;
+  grid-template-areas:
+    "sidebar-top main-view"
+    "sidebar-bottom main-view";
   column-gap: 20px;
   row-gap: 20px;
   width: 100%;
@@ -25,111 +45,24 @@ html, body {
   margin: auto;
 } 
 
-.prompts-popup-flexbox {
-  display: flex;            /* Use flexbox for layout */
-  justify-content: center;  /* Center horizontally */
-  align-items: center;      /* Center vertically */
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 200px;
-  pointer-events: none;
-}
-
-.prompts-popup {
-  position: relative;
-  box-shadow: 4.6px 9.3px 9.3px hsl(0deg 0% 0% / 0.36);
-  display: none;
-  width: 80%;
-  height: 90%;
-  background: white;
-  border: 1px solid black;
-  padding: 20px;
-  overflow-y: scroll;
-  border-radius: 4px;
-  max-width: 1200px;
-  pointer-events: visible;
-}
-
-.prompts-popup > p, .prompts-popup > div {
-  max-width: 1152px;
-  max-width: 1152px;
-}
-
-.prompts-popup .close-cross {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  font-size: var(--font-large);
-  cursor: pointer;
-}
-.prompts-popup .close-cross:hover {
-  color: white;
-  background: black;
+@media (max-width: 768px) {
+  .app-container {
+    grid-template-rows: auto auto auto;
+    grid-template-columns: 1fr;        /* single column */
+    grid-template-areas:
+      "sidebar-top"
+      "main-view"
+      "sidebar-bottom";
+  }
 }
 
 
 
-.prompts-popup span.prompt-hover {
-  height: 30px;
-  transition: height 0.3s ease;
-}
-.prompts-popup span.prompt-hover:hover {
-  height: 40px;
-}
-
-
-
-.prompts-popup .text-stats span {
-  margin-right: 1em;
-}
-.prompts-popup .prompt {
-  margin-top: 30px;
-}
-.prompts-popup .prompt em {
-  font-weight: bold;
-  font-style: normal;
-  font-size: var(--font-medium);
-}
-
-.prompts-popup .other-bot {
-  cursor: pointer;
-  color: #005f87;
-}
-.prompts-popup .other-bot:hover {
-  
-  text-decoration: underline;
-}
-.prompts-popup .clip-effect {
-  display: inline-block;
-  overflow: hidden; /* Prevents overflow */
-  white-space: nowrap; /* Keeps text in one line */
-  animation: reveal 0.5s linear forwards;
-}
-
-
-@keyframes reveal {
-from {
-  clip-path: inset(0 100% 0 0); /* Initially hide text */
-}
-to {
-  clip-path: inset(0 0 0 0); /* Fully reveal text */
-}
-}
-
-
-
-
-
-.info-section {
+.sidebar {
   display: flex;
   flex-direction: column;
-  grid-column-start: 1; grid-column-end: 2;    
   width: 100%;
-  height: 100%;
   max-height: 100vh; /* SUPPOSEDLY Prevents it from growing beyond its parent */
-  min-height: 100vh; /* SUPPOSEDLY Fixes flexbox behavior where children may force parent to expand */
   overflow: hidden;
   padding-left: 10px;
   hyphens: auto;
@@ -137,11 +70,19 @@ to {
   -moz-hyphens: auto;
   -ms-hyphens: auto; 
 }
+.sidebar-top {
+  grid-area: sidebar-top;
+}
+
+.sidebar-bottom {
+  grid-area: sidebar-bottom;
+}
 .info-static {
   flex: none;
 }
 .info-static .title, .info-static .intro {
   width: 100%;
+  max-width: 300px;
 }
 .info-static text{
   fill: #1fa0a9;
@@ -153,10 +94,10 @@ to {
   max-height: 250px;
 }
 
-.info-section .hoverHint {
+.sidebar .hoverHint {
   font-size: var(--font-medium);
 }
-.info-section .colorlegend {
+.sidebar .colorlegend {
   font-size: var(--font-medium);
 }
 .info-image {
@@ -200,22 +141,11 @@ to {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-.correct {
-  font-weight: bold;
-  color: darkgreen;
-}
-.wrong {
-  font-weight: bold;
-  color: orange;
-}
-.verywrong {
-  font-weight: bold;
-  color: red;
-}
+
 
 
 .chart-section {
-  grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;
+  grid-area: main-view;
   padding-top: 20px;
   position: relative; 
   overflow: hidden;
@@ -240,80 +170,4 @@ canvas {
 
 
 
-.header{
-  position: absolute;
-  display: grid;
-  align-items: center;
-  grid-template-columns: auto auto;
-  grid-template-rows: 25px 20px;
-  justify-content: start;
-  row-gap: 5px;
-  column-gap: 5px;
-  pointer-events: none;
-}
-.header .logo {
-  grid-column-start: 1; grid-column-end: 2; grid-row-start:1; grid-row-end:2;
-  pointer-events: none;
-  height: 40px;
-}
-.header .title {
-  grid-column-start: 2; grid-column-end: 3; grid-row-start:1; grid-row-end:2;
-  pointer-events: none;
-}
-.header .input {
-  grid-column-start: 2; grid-column-end: 3; grid-row-start:2; grid-row-end:3;
-}
-.header .input select {
-  opacity: 0.5;
-  font-size: var(--font-tiny);
-  border: 1px solid transparent;;
-  border-radius: 3px;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #444;
-  cursor: pointer;
-  pointer-events: visible;
-}
-.header .input select:hover {
-  opacity: 1;
-  border: 1px solid #000;
-  color: #000;
-  background-color: rgba(255, 255, 255, 1);
-}
-
-
-
-.questions-section {
-  flex: none;
-}
-.question-icon {
-  flex: 1 1 calc(15%); 
-  margin: 2px; 
-  box-sizing: border-box; 
-  cursor: pointer;
-}
-.question-icon img {
-  width: 100%;
-}
-.questions-section .question-icon-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between; 
-}
-.questions-section .question-pile-container {
-  display: grid;
-  grid-template-columns: repeat(18, 1fr);
-}
-.questions-section .question-pile {
-  line-height: 10px;
-  max-width: 75px;
-}
-.questions-section .question-rect{
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border: 1px solid white;
-  cursor: pointer;
-}
   

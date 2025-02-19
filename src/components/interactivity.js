@@ -1,7 +1,7 @@
 import * as d3 from "npm:d3";
   
 
-export default function interactivity({app, sections, sdgcolors, questionMap, shortQNamesMap, sdgGoalText, selectedModels, sdgicons, promptsPopup}){
+export default function interactivity({app, sections, sdgcolors, questionMap, shortQNamesMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isMobile}){
 
     function toSentenceCase(str) {
       if (!str) return str; // Handle empty or null strings
@@ -59,6 +59,7 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
         .on("circleclick", (event, i) => {
 
           if (!event?.detail) return;
+          if (isMobile()) return;
 
           promptsPopup.update({
             view: DOM.promptsPopup, 

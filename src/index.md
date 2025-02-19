@@ -87,6 +87,8 @@ const dataWithPrecomputedForceLayoutXY = d3.rollup(
 
 ```js
 function getChartWidth(){
+  if (isMobile())
+    return width;
   if (width / 5 <= 250)
     return width - 250;
   return Math.min(width * 4 /5, 2000*4/5);
@@ -94,12 +96,22 @@ function getChartWidth(){
 ```
 
 ```js
+function isMobile(){
+  const isTouchDevice = ('ontouchstart' in window) 
+    || (navigator.maxTouchPoints > 0) 
+    || (navigator.msMaxTouchPoints > 0); // for older IE
+  return (width <= 768) && isTouchDevice;
+}
+
+```
+
+```js
 const nLanes = 8;
 const paddingTop = 20;
-const margin = {right: 40, left: 20, top: 20, axis: 25};
+const margin = {right: isMobile() ? 5:40, left: 20, top: 20, axis: 25};
 const xScale = d3.scaleLinear([0, 100], [margin.left, getChartWidth() - margin.right - margin.left]);
 const canvasOverflow = 50;
-const singleChartHeight = (window.innerHeight - margin.axis - margin.top - paddingTop)/nLanes - 1;
+const singleChartHeight = isMobile() ? 200 : (window.innerHeight - margin.axis - margin.top - paddingTop)/nLanes - 1;
 const headerShiftHeight = 0;
 ```
 
@@ -182,13 +194,8 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
   
   <div class="app-container" lang="en">
 
-    <div class="info-section"> 
+    <div class="sidebar sidebar-top"> 
       <div class="info-static">${explanation({dsinfo, introVideoPng, initialOverallCorrect})}</div>
-      <div class="info-question-details"></div>
-
-      <div class="info-hint-topics">${explanationTopics()}</div>
-      <div class="questions-section">${QuestionsCatalog({sdgicons, question, sdgcolors})}</div>
-      <div class="info-menu">${infoMenu({questionSvg, infoSvg})}</div>
     </div>
 
     <div class="chart-section">
@@ -203,6 +210,14 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
       <div style="position:absolute; top:${paddingTop}px; left:calc(35% + 70px); color:orange">${chimpText}</div>
     </div>
 
+    <div class="sidebar sidebar-bottom"> 
+      <div class="info-question-details"></div>
+
+      <div class="info-hint-topics">${explanationTopics()}</div>
+      <div class="questions-section">${QuestionsCatalog({sdgicons, question, sdgcolors})}</div>
+      <div class="info-menu">${infoMenu({questionSvg, infoSvg})}</div>
+    </div>
+
     <div class="prompts-popup-flexbox"><div class="prompts-popup"></div></div>
 
   </div>
@@ -212,7 +227,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
 
 ```js
   const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
-  interactivity({app, sections:charts,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp});
+  interactivity({app, sections:charts,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isMobile});
 ```
 
 
