@@ -38,7 +38,6 @@ style: style.css
   FileAttachment("./assets/botlogos/chimp.png"),
 
   FileAttachment("./assets/intro-video-thumbnail.png"),
-  FileAttachment("./assets/robot-icon.png"),
 ];
 ```
 ```js
@@ -47,7 +46,7 @@ import OneChartCanvas from "./components/oneChartCanvas.js"
 import BotHeader from "./components/BotHeader.js"
 import QuestionsCatalog from "./components/QuestionsCatalog.js"
 import {axis, explanation, explanationTopics} from "./components/Misc.js"
-import {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng, robotIconPng} from "./components/references.js"
+import {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng} from "./components/references.js"
 import interactivity from "./components/interactivity.js"
 import promptsPopup from "./components/PropmptsPopup.js"
 ```
@@ -173,7 +172,7 @@ console.log(questionMap, shortQNamesMap)
   <div class="app-container" lang="en">
 
     <div class="info-section"> 
-      <div class="info-static">${explanation(dsinfo, introVideoPng, robotIconPng)}</div>
+      <div class="info-static">${explanation(dsinfo, introVideoPng)}</div>
       <div class="info-question-details"></div>
 
       <div class="info-hint-topics">${explanationTopics()}</div>

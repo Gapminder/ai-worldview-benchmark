@@ -141,47 +141,11 @@ to {
   flex: none;
 }
 .info-static .title{
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: 25px 25px 25px;
-  grid-column-gap: 5px;
-  color: #1fa0a9;
+  width: 100%;
 }
-.info-static .title .icon img{
-  width: 75px;
-  height: 75px;
-}
-.info-static .title .icon{
-  grid-column-start: 1; grid-column-end: 2; 
-  grid-row-start: 1; grid-row-end: 4;
-  align-self: center;
-  justify-self: center;
-}
-.info-static .title .h3{
-  grid-column-start: 2; grid-column-end: 3; 
-  grid-row-start: 1; grid-row-end: 2;
-  font-size: var(--font-tiny);
-  font-weight: normal;
-  align-self: center;
-}
-.info-static .title .h1{
-  grid-column-start: 2; grid-column-end: 3; 
-  grid-row-start: 2; grid-row-end: 3;
-  font-size: var(--font-large);
-  font-weight: bold;
-  align-self: center;
-}
-.info-static .title .h2{
-  grid-column-start: 2; grid-column-end: 3; 
-  grid-row-start: 3; grid-row-end: 4;
-  font-size: var(--font-medium);
-  font-weight: normal;
-  align-self: center;
-}
-
-.info-static .intro {
-  font-size: var(--font-medium);
-  color: #1fa0a9;
+.info-static text{
+  fill: #1fa0a9;
+  font-family: sans-serif;
 }
 
 .info-static .video img {

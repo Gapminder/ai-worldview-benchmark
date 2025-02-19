@@ -135,7 +135,6 @@ const sdgicons = Promise.all([
 )
 
 const introVideoPng = await FileAttachment("./assets/intro-video-thumbnail.png").image();
-const robotIconPng = await FileAttachment("./assets/robot-icon.png").image();
 
 const sdgcolors = ({
   "sdg-world-01": "#E5243B",
@@ -158,4 +157,4 @@ const sdgcolors = ({
   "other": "#ffdb69",
   })
 
-export {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng, robotIconPng}
+export {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng}
