@@ -25,7 +25,7 @@ const questions = await readerInstance.read({
 const model_configuration = await readerInstance.read({
   from: "entities",
   language: "en",
-  select: {key: ["model_configuration"], value: ["model_id","model_name", "vendor", "is--latest_model"]},
+  select: {key: ["model_configuration"], value: ["model_id","model_name","model_publish_date","vendor", "is--latest_model"]},
   where: {}
 })
 

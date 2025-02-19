@@ -2,10 +2,13 @@
 import * as d3 from "npm:d3";
   
 
+const dateFormatter = d3.utcFormat("%b %Y");
+
 export default function BotHeader({vendor, botLogos, model_configurationWithHuman, setSelectedModel, selectedModels, dataWithPrecomputedForceLayoutXY, left=0, top=0}){
     function getModelOptions(vendor) {
       return model_configurationWithHuman
         .filter(f => f.vendor === vendor && dataWithPrecomputedForceLayoutXY.has(f.model_configuration))
+        .toSorted((b,a) => a.model_publish_date - b.model_publish_date);
     }
     
     const div = d3.create("div")
@@ -35,7 +38,7 @@ export default function BotHeader({vendor, botLogos, model_configurationWithHuma
         .data(modelOptions)
         .join("option")
         .attr("value", d => d.model_configuration)
-        .text(d => d.model_name)
+        .text(d => `${d.model_name} in ${dateFormatter(d.model_publish_date)}`)
     
       select.property('value', selectedModels[vendor]);
       select.on("change", event => {
