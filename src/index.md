@@ -106,10 +106,20 @@ const headerShiftHeight = 0;
 ```js
 const rollup = d3.rollups(model_configurationWithHuman, v=>v.find(f => f["is--latest_model"])?.model_configuration, d => d.vendor)
   .filter(([_, f]) => dataWithPrecomputedForceLayoutXY.has(f));
+const initialOverallCorrect = getInitialOverallCorrect(rollup.map(([vendor, model]) => model));
 const selectedModels = Mutable(Object.fromEntries(rollup));
 const setSelectedModel = (vendor, model)=>{
   const newSelectedModels = Object.assign({}, selectedModels.value, {[vendor]: model});
   selectedModels.value = newSelectedModels;
+}
+```
+
+```js
+function getInitialOverallCorrect(models){
+  const everyModelCorrectness = models
+    .filter(f => f !== "humans")
+    .map((model) => d3.mean( dataWithPrecomputedForceLayoutXY.get(model), d => d.correct_rate) );
+  return d3.mean(everyModelCorrectness);
 }
 ```
 
@@ -172,7 +182,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
   <div class="app-container" lang="en">
 
     <div class="info-section"> 
-      <div class="info-static">${explanation(dsinfo, introVideoPng)}</div>
+      <div class="info-static">${explanation({dsinfo, introVideoPng, initialOverallCorrect})}</div>
       <div class="info-question-details"></div>
 
       <div class="info-hint-topics">${explanationTopics()}</div>

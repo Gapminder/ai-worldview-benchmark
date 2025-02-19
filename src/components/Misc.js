@@ -12,7 +12,7 @@ const axis = (xScale, width) => {
 
 const dateFormatter = d3.utcFormat("%b %d %Y");
 
-const explanation = (dsinfo = {}, introVideoPng) => html`<h1></h1>
+const explanation = ({dsinfo = {}, introVideoPng, initialOverallCorrect}) => html`<h1></h1>
   <svg class="title" viewBox="0 0 245 85" preserveAspectRatio="xMinYMin meet">
     <path
     style="fill:#1fa0a9;fill-opacity:1"
@@ -20,7 +20,7 @@ const explanation = (dsinfo = {}, introVideoPng) => html`<h1></h1>
     />
     <text font-size=14px x=80 y=15>${dateFormatter(new Date(dsinfo.created || "2025-02-16"))} Benchmark</text>
     <text font-size=26px font-weight=bold x=80 y=46>AI Worldview</text>
-    <text font-size=20px x=80 y=72>79.6% CORRECT</text>
+    <text font-size=20px x=80 y=72>${initialOverallCorrect.toFixed(1)}% CORRECT</text>
   </svg>
 
   <svg class="intro" viewBox="0 0 245 80" preserveAspectRatio="xMinYMin meet">
