@@ -50,7 +50,7 @@ const infoMenu = ({questionSvg, infoSvg}) => {
     </div>
     <div class="info-menu-item">
       ${infoSvgParsed}
-      <a href="https://www.gapminder.org/aiwb_method/" target="_blank">More info and method...</a>
+      <a href="https://www.gapminder.org/ai/method/" target="_blank">More info and method...</a>
     </div>
   `;
 };
