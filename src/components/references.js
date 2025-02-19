@@ -8,7 +8,7 @@ const botLogos = ({
   "OpenAI": await FileAttachment("./assets/botlogos/openai.png").image(),
   "Google": await FileAttachment("./assets/botlogos/google.png").image(),
   "Alibaba": await FileAttachment("./assets/botlogos/alibaba.png").image(),
-  "Human": await FileAttachment("./assets/botlogos/human.png").image(),
+  "Humans": await FileAttachment("./assets/botlogos/human.png").image(),
   "Meta": await FileAttachment("./assets/botlogos/meta.png").image(),
   "XAI": await FileAttachment("./assets/botlogos/xai.png").image(),
   "DeepSeek": await FileAttachment("./assets/botlogos/deepseek.png").image(),

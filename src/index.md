@@ -61,7 +61,7 @@ const model_configurationWithHuman = await zip1.file("entities-mdlconfigs.csv").
 const datapoints_correct_rate = await zip1.file("datapoints-rates.csv").csv({typed: true});
 
 const model_configurationWithHumanMap = d3.rollup(model_configurationWithHuman, v=>v[0], d=>d.model_configuration)
-const human = question.map(m => ({question: m.question, model_configuration: "human", correct_rate: 100-(+m.human_wrong_percentage)}))
+const human = question.map(m => ({question: m.question, model_configuration: "humans", correct_rate: 100-(+m.human_wrong_percentage)}))
 const datapoints_ratesWithHuman = datapoints_correct_rate.concat(human);
 const questionMap = d3.rollup(question, v=>v[0], d=>d.question);
 
@@ -123,7 +123,7 @@ function getSections(){
 
   const fill = (d) => sdgcolors[questionMap.get(d.question).sdg_world_topics];
   return [
-    {fill, xScale, width, canvasOverflow, vendor: "Human", data: getData("Human"), averageMarkColor: "#333",
+    {fill, xScale, width, canvasOverflow, vendor: "Humans", data: getData("Humans"), averageMarkColor: "#333",
       height: height + margin.axis + margin.top, marginTop: margin.top, marginBottom: margin.axis
     },
     {fill, xScale, width, canvasOverflow, vendor: "Anthropic", data: getData("Anthropic"), height, spellOutAverage: true},

@@ -9,7 +9,7 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
     const getState = function(){return {question: inner_question, model: inner_model}};
     const update = function({view = inner_view, question = inner_question, model = inner_model}){
       
-      if(model === "human") return;
+      if(model === "humans") return;
     
       inner_model = model;
       inner_question = question;
@@ -183,7 +183,7 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
       const otherBots = []
         .concat(model_configurationWithHuman.filter(f => f.vendor === vendor).map(m => m.model_configuration))
         .concat(Object.values(selectedModels))
-        .filter(f => f !== "human" && f !== model)
+        .filter(f => f !== "humans" && f !== model)
     
       const otherBotsData = otherBots
         .map(mc => ({mc, prompts: datapoints_prompt_variationMap.get(mc)?.get(question)}))

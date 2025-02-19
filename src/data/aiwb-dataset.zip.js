@@ -30,10 +30,10 @@ const model_configuration = await readerInstance.read({
 })
 
 const model_configurationWithHuman = model_configuration.concat({
-  model_configuration: "human",
-  model_id: "human",
-  model_name: "Human",
-  vendor: "Human",
+  model_configuration: "humans",
+  model_id: "humans",
+  model_name: "Humans",
+  vendor: "Humans",
   "is--latest_model": true
 })
 

@@ -27,7 +27,7 @@ export default function BotHeader({vendor, botLogos, model_configurationWithHuma
   
     const modelOptions = getModelOptions(vendor);
   
-    if (vendor !== "Human") {
+    if (vendor !== "Humans") {
     
       const select = div.append("div").attr("class", "input").append("select")
         .attr("name", "options")
