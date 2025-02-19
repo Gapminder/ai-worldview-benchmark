@@ -158,7 +158,6 @@ to {
 }
 .info-section .colorlegend {
   font-size: var(--font-medium);
-  font-weight: bold;
 }
 .info-image {
   width: 50px;
