@@ -45,7 +45,9 @@ html, body {
   margin: auto;
 } 
 
-@media (pointer: coarse) and (max-width: 768px) {
+@media /* MOBILE LAYOUT */
+  (pointer: coarse) and (max-width: 768px),
+  (pointer: coarse) and (max-height: 768px)  {
   .app-container {
     grid-template-rows: auto auto auto;
     grid-template-columns: 1fr;        /* single column */

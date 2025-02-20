@@ -97,10 +97,9 @@ function getChartWidth(){
 
 ```js
 function isMobile(){
-  const isTouchDevice = ('ontouchstart' in window) 
-    || (navigator.maxTouchPoints > 0) 
-    || (navigator.msMaxTouchPoints > 0); // for older IE
-  return (width <= 768) && isTouchDevice;
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  const isSmallScreen = (width <= 768) || (window.innerHeight <= 768);
+  return isSmallScreen && isTouchDevice;
 }
 
 ```
@@ -112,7 +111,7 @@ const margin = {right: isMobile() ? 5:40, left: 20, top: 20, axis: 25};
 const xScale = d3.scaleLinear([0, 100], [margin.left, getChartWidth() - margin.right - margin.left]);
 const canvasOverflow = 50;
 const singleChartHeight = isMobile() ? 200 : (window.innerHeight - margin.axis - margin.top - paddingTop)/nLanes - 1;
-const headerShiftHeight = 0;
+const headerShiftHeight = -10;
 ```
 
 ```js
