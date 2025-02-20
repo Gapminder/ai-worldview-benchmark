@@ -79,15 +79,15 @@ export default function OneChartCanvas({
       drawDownTriangle(context, xScale(average), height/3 - marginTop, 15, averageMarkColor);
 
       // Draw middle-anchored text at (200, 200)
-      drawCenteredText(context, Math.round(average) + "%", xScale(average) + 2, height/3 - 22 - marginTop, "16px Arial", averageMarkColor);
+      drawCenteredText(context, Math.round(average) + "%", xScale(average) + 2, height/3 - 22 - marginTop, "bold 16px Arial", averageMarkColor);
 
       // Draw middle-anchored text at (200, 200)
       if (spellOutAverage)
-        drawCenteredText(context, "Average", xScale(average), height/3 - 22 - marginTop - 16, "16px Arial", averageMarkColor);
+        drawCenteredText(context, "Average", xScale(average), height/3 - 22 - marginTop - 16, "bold 16px Arial", averageMarkColor);
 
       // Draw the chimp line
       if (chimpLine) {
-        context.strokeStyle = "orange"; // Line color
+        context.strokeStyle = "#FFCB34"; // Line color
         context.lineWidth = 3; // Line width
         context.beginPath();
         context.moveTo(xScale(33.3), marginTop); // Starting point (x1, y1)
