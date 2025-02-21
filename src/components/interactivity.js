@@ -87,11 +87,14 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
   
       if(spec && spec.goal) {
         const text = sdgGoalText[spec.goal];
+        const UPGRADER_LINK = "https://upgrader.gapminder.org/t/";
+
         DOM.qDetails.html(`
           <div class="info-image"></div>
           <h2>${text.title}</h2>
           <h1>${toSentenceCase(text.objective)}</h1>
           <p>${text.description}</p>
+          <p><a src="${UPGRADER_LINK}" target="_blank">See topic on Upgrader app</a></p>
         `);
         DOM.qDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===spec.goal).image.src}>`)
         DOM.qDetails.select("h2").style("color", sdgcolors[spec.goal]);
