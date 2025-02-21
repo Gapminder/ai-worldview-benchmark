@@ -16,6 +16,7 @@ const questions = await readerInstance.read({
       "topic_list","sdg_world_topics",
       "other_topics",
       "option_a", "option_b", "option_c", "option_a_correctness", "option_b_correctness", "option_c_correctness",
+      "short_title",
     ]},
   where: {}
 }).then(

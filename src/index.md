@@ -46,6 +46,7 @@ style: style.css
 import {runForceSimulation} from "./components/forceLayout.js"
 import OneChartCanvas from "./components/oneChartCanvas.js"
 import BotHeader from "./components/BotHeader.js"
+import Tooltip from "./components/Tooltip.js"
 import QuestionsCatalog from "./components/QuestionsCatalog.js"
 import {axis, explanation, explanationTopics, infoMenu} from "./components/Misc.js"
 import {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng, questionSvg, infoSvg} from "./components/references.js"
@@ -135,7 +136,7 @@ function getInitialOverallCorrect(models){
 ```
 
 ```js 
-function getSections(){
+function getTracksConfig(){
   const height = singleChartHeight;
   const width = getChartWidth();
   function getData(vendor) {
@@ -157,25 +158,45 @@ function getSections(){
     {fill, xScale, width, canvasOverflow, vendor: "XAI", data: getData("XAI"), height},
   ]
 }
-const sections = getSections()
+const tracksConfig = getTracksConfig()
 ```
 
 
 ```js
-const charts = sections.map(config => ({
-  config, 
-  header: BotHeader({
-      botLogos, 
-      selectedModels, 
-      setSelectedModel,
-      model_configurationWithHuman, 
-      dataWithPrecomputedForceLayoutXY, 
-      top: headerShiftHeight, 
-      left: margin.left, 
-      ...config
-    }), 
-      chart: OneChartCanvas({questionMap, ...config})
-  }))
+const tracks = tracksConfig.map(config => {
+  const tooltip = Tooltip({
+    questionMap,
+    shortQNamesMap,
+    margin,
+    sdgcolors,
+    sdgicons,
+    isMobile,
+    ...config
+  });
+  const header = BotHeader({
+    botLogos, 
+    selectedModels, 
+    setSelectedModel,
+    model_configurationWithHuman, 
+    dataWithPrecomputedForceLayoutXY, 
+    top: headerShiftHeight, 
+    left: margin.left, 
+    ...config
+  });
+  const chart = OneChartCanvas({questionMap, ...config});
+
+  const div = d3.create("div")
+    .attr("class", "track")
+    .attr("id", config.vendor)
+    .style("height", config.height + "px")
+
+  div.append(() => chart.node);
+  div.append(() => header.node);
+  div.append(() => tooltip.node);
+
+  return {config, tooltip, header, chart, node: div.node()};
+  
+})
 ```
 
 ```js
@@ -200,11 +221,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
     <div class="chart-section">
       <div style="position:absolute; top:${singleChartHeight + paddingTop}px; left:0;" class="xaxis">${axis(xScale, getChartWidth())}</div>
       <div style="position:absolute; top:${singleChartHeight}px; right:${margin.right}px;" class="xaxistext">CORRECT ANSWERS</div>
-      ${charts.map(m => html.fragment`
-        <div class="one-chart" id="${m.config.vendor}" style="height: ${m.config.height}px;">
-          ${m.chart.canvas}${m.header}
-        </div>
-      `)}
+      ${tracks.map(track => track.node)}
       
       <img style="position:absolute; top:${isMobile() ? 0 : paddingTop - 10}px; left:calc(35% + ${isMobile() ? "70px" : "0px"}); width:60px" src="${botLogos["Chimp"].src}"/>
       <div style="position:absolute; top:${isMobile() ? paddingTop + 30 : paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
@@ -227,7 +244,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
 
 ```js
   const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
-  interactivity({app, sections:charts,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isMobile});
+  interactivity({app, tracks,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isMobile});
 ```
 
 

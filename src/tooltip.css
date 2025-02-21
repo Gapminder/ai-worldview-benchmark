@@ -1,0 +1,66 @@
+:root {
+  --tooltip-shadow-color: rgba(0,0,0,1);
+}
+
+.tooltip {
+  display: none;
+  border: 1px solid black;
+  border-radius: 8px;
+  position: absolute;
+  background-color: white;
+  overflow: hidden;
+  pointer-events: none;
+  padding: 10px;
+
+  box-shadow: 0px 7px 14px 2px var(--shadow-color);
+  -webkit-box-shadow: 0px 7px 14px 2px var(--shadow-color);
+  -moz-box-shadow: 0px 7px 14px 2px var(--shadow-color);
+  border: 2px solid var(--shadow-color);
+
+  column-gap: 10px;
+  row-gap: 10px;
+  align-items: center;
+}
+
+.tooltip:not(.rtl) {
+  grid-template-columns: 5.5em auto auto auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "title title title icon"
+    "ctext cpercent link link";
+}
+
+.tooltip.rtl {
+  grid-template-columns: auto auto auto 5.5em;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "icon title title title"
+    "link link cpercent ctext";
+
+  text-align: right;
+}
+
+.tooltip .title{
+  grid-area: title;
+  font-size: var(--font-large);
+  font-weight: bold;
+}
+.tooltip .icon{
+  grid-area: icon;
+}
+.tooltip .icon img{
+  width: 40px;
+}
+.tooltip .correct-text{
+  grid-area: ctext;
+  font-size: var(--font-small);
+  text-transform: uppercase;
+}
+.tooltip .correct-percent{
+  grid-area: cpercent;
+  font-size: var(--font-large);
+}
+.tooltip .link-to-more{
+  grid-area: link;
+  pointer-events: visible;
+}

@@ -134,7 +134,7 @@ export default function OneChartCanvas({
     
     render();
   
-    return {canvas, render};
+    return {node: canvas, render};
   }
 
 

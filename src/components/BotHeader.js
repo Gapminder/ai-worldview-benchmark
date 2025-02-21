@@ -46,6 +46,13 @@ export default function BotHeader({vendor, botLogos, model_configurationWithHuma
         setSelectedModel(vendor, setOption);
       })
     }
+
+    function show(){
+      div.select("select").style("opacity",1);
+    }
+    function hide(){
+      div.select("select").style("opacity",0.5);
+    }
     
-    return div.node();
+    return {node: div.node(), show, hide};
   }

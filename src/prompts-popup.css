@@ -8,6 +8,7 @@
     right: 0px;
     bottom: 200px;
     pointer-events: none;
+    z-index: 5;
   }
   
   .prompts-popup {
@@ -23,6 +24,7 @@
     border-radius: 4px;
     max-width: 1200px;
     pointer-events: visible;
+    z-index: 6;
   }
   
   .prompts-popup > p, .prompts-popup > div {

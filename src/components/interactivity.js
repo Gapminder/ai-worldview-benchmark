@@ -1,7 +1,7 @@
 import * as d3 from "npm:d3";
   
 
-export default function interactivity({app, sections, sdgcolors, questionMap, shortQNamesMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isMobile}){
+export default function interactivity({app, tracks, sdgcolors, questionMap, shortQNamesMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isMobile}){
 
     function toSentenceCase(str) {
       if (!str) return str; // Handle empty or null strings
@@ -23,7 +23,6 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
     DOM.intro = DOM.container.selectAll(".intro");
     DOM.video = DOM.container.selectAll(".video");
     DOM.promptsPopup = DOM.container.select(".prompts-popup");
-    DOM.charts = DOM.container.selectAll(".one-chart");
   
     DOM.questionsSection
       .on("mouseleave", (event, d) => highlight(null));
@@ -42,20 +41,32 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
             })
       });
 
-    DOM.charts
-      .on("mouseleave", function(event, d) {
-        highlight(null);
-        d3.select(this).select("select").style("opacity",0.5);
-      })
-      .on("mouseenter", function(event, d) {
-        d3.select(this).select("select").style("opacity",1);
-      });
   
-    sections.forEach(section => {
-      const data = section.config.data;
-      d3.selection.chart
-      d3.select(section.chart.canvas)
-        .on("circlehover", (event, i) => highlight( event?.detail?.question ? {question: event.detail.question} : null ))
+    tracks.forEach(track => {
+      
+      const trackNode = d3.select(track.node);
+      trackNode.on("mouseleave", function(event, d) {
+        highlight(null);
+        track.header.hide();
+        track.tooltip.hide();
+        trackNode.style("z-index", 0);
+      })
+      trackNode.on("mouseenter", function(event, d) {
+        track.header.show();
+        
+      });
+
+      d3.select(track.chart.node)
+        .on("circlehover", (event, i) => {
+          const question = event?.detail?.question || null;
+          if (question) {
+            track.tooltip.show(event.detail);
+            trackNode.style("z-index", 1);
+          } else {
+            track.tooltip.hide();
+          }
+          highlight({question})
+        })
         .on("circleclick", (event, i) => {
 
           if (!event?.detail) return;
@@ -74,7 +85,7 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
     
     function highlight(spec){
   
-      sections.forEach(section => section.chart.render(spec));
+      tracks.forEach(track => track.chart.render(spec));
   
       if(spec && spec.question){
         DOM.qRects
@@ -103,9 +114,9 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
         DOM.video.style("display", "none");
       }
       if(spec && spec.question) {
-        const text = questionMap.get(spec.question);
+        const questionProps = questionMap.get(spec.question);
         const shortText = shortQNamesMap.get(spec.question);
-        const goal = text.sdg_world_topics;
+        const goal = questionProps.sdg_world_topics;
         function getCorrectnessClassName(num){
           if (num == 1) return "correct";
           if (num == 2) return "wrong";
@@ -120,16 +131,16 @@ export default function interactivity({app, sections, sdgcolors, questionMap, sh
         DOM.qDetails.html(`
           <p>${sdgGoalText[goal].title}, Question ${spec.question}</p>
           <h2>${shortText}</h2>
-          <p>${text.published_version_of_question || "The question probably had images in it, this app doesn't support it yet"}</p>
-          <p><span class="${getCorrectnessClassName(text.option_a_correctness)}">
-            ${getCorrectnessText(text.option_a_correctness)}
-          </span><br/>A. ${text.option_a}</p>
-          <p><span class="${getCorrectnessClassName(text.option_b_correctness)}">
-            ${getCorrectnessText(text.option_b_correctness)}
-          </span><br/>B. ${text.option_b}</p>
-          <p><span class="${getCorrectnessClassName(text.option_c_correctness)}">
-            ${getCorrectnessText(text.option_c_correctness)}
-          </span><br/>C. ${text.option_c}</p>
+          <p>${questionProps.published_version_of_question || "The question probably had images in it, this app doesn't support it yet"}</p>
+          <p><span class="${getCorrectnessClassName(questionProps.option_a_correctness)}">
+            ${getCorrectnessText(questionProps.option_a_correctness)}
+          </span><br/>A. ${questionProps.option_a}</p>
+          <p><span class="${getCorrectnessClassName(questionProps.option_b_correctness)}">
+            ${getCorrectnessText(questionProps.option_b_correctness)}
+          </span><br/>B. ${questionProps.option_b}</p>
+          <p><span class="${getCorrectnessClassName(questionProps.option_c_correctness)}">
+            ${getCorrectnessText(questionProps.option_c_correctness)}
+          </span><br/>C. ${questionProps.option_c}</p>
         `);
         //DOM.qDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
         DOM.qDetails.select("h2").style("color", sdgcolors[goal]);
