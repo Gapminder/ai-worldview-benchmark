@@ -144,7 +144,8 @@ html, body {
   font-size: var(--font-medium);
 }
 .info-sdg-details {
-  margin-top: 50px
+  margin-top: 50px;
+  margin-bottom: 50px;
 };
 .info-question-details p,
 .info-question-details h2,

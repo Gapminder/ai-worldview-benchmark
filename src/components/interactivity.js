@@ -34,18 +34,17 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
         if (isTouchDevice || d.goal === "other") return;
         window.open(UPGRADER_LINK + d.goal, '_blank').focus();
       });
-    DOM.qRects
-      .on("mouseenter", (event, d) => highlight({question: d.question}))
-      .on("click", (event, d) => {
-        const defaultModel = Object.values(selectedModels)[0];
+    // DOM.qRects
+    //   .on("mouseenter", (event, d) => highlight({question: d.question}))
+    //   .on("click", (event, d) => {
+    //     const defaultModel = Object.values(selectedModels)[0];
     
-        promptsPopup.update({
-         view: DOM.promptsPopup, 
-          show: true, 
-          question: d.question,
-          model: promptsPopup.getState.model || defaultModel,
-            })
-      });
+    //     promptsPopup.update({
+    //      view: DOM.promptsPopup, 
+    //       question: d.question,
+    //       model: promptsPopup.getState.model || defaultModel,
+    //         })
+    //   });
 
   
     tracks.forEach(track => {
@@ -68,10 +67,18 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
           if (question) {
             track.tooltip.show(event.detail);
             trackNode.style("z-index", 1);
+            track.tooltip.clickToMore(()=>{
+              promptsPopup.update({
+                view: DOM.promptsPopup, 
+                question: question, 
+                model: event?.detail?.model_configuration
+                })
+            })
           } else {
             track.tooltip.hide();
           }
-          highlight({question})
+
+          highlight({question});
         })
         .on("circleclick", (event, i) => {
 
@@ -80,7 +87,6 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
 
           promptsPopup.update({
             view: DOM.promptsPopup, 
-            show: true, 
             question: event?.detail?.question, 
             model: event?.detail?.model_configuration
             })
