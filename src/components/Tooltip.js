@@ -24,8 +24,7 @@ export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicon
     .attr("class", "correct-percent")
   const linkToMore = div.append("div")
     .attr("class", "link-to-more")
-    .text("Explore variations")
-    .style("display", isTouchDevice ? "block" : "none" )
+    .text("Explore variations");
   
   function show({x, question, model_configuration, correct_rate}){
     const shortTitile = shortQNamesMap.get(question);
@@ -56,6 +55,7 @@ export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicon
       .text(shortTitile);
     correctPercent.text(Math.round(correct_rate) + "%");
     
+    linkToMore.style("display", model_configuration !== "humans" && isTouchDevice ? "block" : "none");
   }
   function hide(){
     div.style("display", "none")
