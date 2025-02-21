@@ -98,7 +98,7 @@ function getChartWidth(){
 
 ```js
 const isSmallScreen = (width <= 768) || (window.innerHeight <= 768);
-const isTouchDevice =  isSmallScreen//('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+const isTouchDevice =  ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 const isMobile = isSmallScreen && isTouchDevice;
 ```
 

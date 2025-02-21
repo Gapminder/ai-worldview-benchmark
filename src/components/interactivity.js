@@ -27,7 +27,10 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
     DOM.promptsPopup = DOM.container.select(".prompts-popup");
   
     DOM.questionsSection
-      .on("mouseleave", (event, d) => highlight(null));
+      .on("mouseleave", (event, d) => {
+        if (isTouchDevice) return;
+        highlight(null)
+      });
     DOM.qIcons
       .on("mouseenter", (event, d) => highlight({goal: d.goal}))
       .on("click", (event, d) => {
