@@ -205,8 +205,9 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
           ${m.chart.canvas}${m.header}
         </div>
       `)}
-      <img style="position:absolute; top:${paddingTop - 10}px; left:35%; width:60px" src="${botLogos["Chimp"].src}"/>
-      <div style="position:absolute; top:${paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
+      
+      <img style="position:absolute; top:${isMobile() ? 0 : paddingTop - 10}px; left:calc(35% + ${isMobile() ? "70px" : "0px"}); width:60px" src="${botLogos["Chimp"].src}"/>
+      <div style="position:absolute; top:${isMobile() ? paddingTop + 30 : paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
     </div>
 
     <div class="sidebar sidebar-bottom"> 

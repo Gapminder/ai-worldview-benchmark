@@ -16,11 +16,11 @@
   (pointer: coarse) and (max-width: 768px),
   (pointer: coarse) and (max-height: 768px)  {
   .header {
-    grid-template-columns: auto auto;
-    grid-template-rows: 30px 20px;
+    grid-template-columns: 40px auto;
+    grid-template-rows: 35px 20px;
     grid-template-areas:
       "logo title"
-      "logo input";
+      "input input";
     align-items: start;
   }
 }

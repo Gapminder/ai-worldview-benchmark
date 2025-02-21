@@ -6,7 +6,7 @@ const axis = (xScale, width) => {
     .attr("width", `${width}px`)
     .attr("height", `27px`)
   svg.append("g")
-    .call(d3.axisBottom(xScale).tickFormat(n => n + "%"));
+    .call(d3.axisBottom(xScale).ticks(width < 500 ? 5 : 10).tickFormat(n => n + "%"));
   return svg.node();
 }
 
