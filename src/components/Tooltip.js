@@ -1,15 +1,14 @@
 
 import * as d3 from "npm:d3";
   
-const dx = 20;
+const dx = 50;
 const h = 50;
 
-export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicons, isMobile, margin, width, height, canvasOverflow}){
+export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicons, isTouchDevice, margin, width, height, canvasOverflow}){
   
   const div = d3.create("div")
     .attr("class", "tooltip")
     .style("max-height", height + "px")
-    .style("max-width", (width/2 - dx) + "px")
     .style("top", 0 + "px")
 
   const title = div.append("div")
@@ -25,8 +24,8 @@ export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicon
     .attr("class", "correct-percent")
   const linkToMore = div.append("div")
     .attr("class", "link-to-more")
-    .text("Explore variations...")
-    .style("display", isMobile() ? "block" : "none" )
+    .text("Explore variations")
+    .style("display", isTouchDevice ? "block" : "none" )
   
   function show({x, question, model_configuration, correct_rate}){
     const shortTitile = shortQNamesMap.get(question);
@@ -41,12 +40,14 @@ export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicon
     
     if (x < width / 2) 
       div.style("right", null)
-        .style("left", (x + dx) + "px")
+      .style("left", (x + dx) + "px")
+        .style("max-width", (width - x - dx) + "px")
         .classed("rtl", false);
         
     else
       div.style("left", null)
         .style("right", (width - x - margin.left + dx) + "px")
+        .style("max-width", (x - dx) + "px")
         .classed("rtl", true);
 
     icon.attr("src", sdgicons.find(f => f.goal===goal).image.src);

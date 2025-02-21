@@ -1,7 +1,8 @@
 import * as d3 from "npm:d3";
   
+const UPGRADER_LINK = "https://upgrader.gapminder.org/t/";
 
-export default function interactivity({app, tracks, sdgcolors, questionMap, shortQNamesMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isMobile}){
+export default function interactivity({app, tracks, sdgcolors, questionMap, shortQNamesMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isTouchDevice, isSmallScreen}){
 
     function toSentenceCase(str) {
       if (!str) return str; // Handle empty or null strings
@@ -19,6 +20,7 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
     DOM.qPiles = DOM.qPileContainer.selectAll(".question-pile");
     DOM.qRects = DOM.qPileContainer.selectAll(".question-rect");
     DOM.qDetails = DOM.container.select(".info-question-details");
+    DOM.sdgDetails = DOM.container.select(".info-sdg-details");
     DOM.hints = DOM.container.selectAll(".hoverHint");
     DOM.intro = DOM.container.selectAll(".intro");
     DOM.video = DOM.container.selectAll(".video");
@@ -27,7 +29,11 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
     DOM.questionsSection
       .on("mouseleave", (event, d) => highlight(null));
     DOM.qIcons
-      .on("mouseenter", (event, d) => highlight({goal: d.goal}));
+      .on("mouseenter", (event, d) => highlight({goal: d.goal}))
+      .on("click", (event, d) => {
+        if (isTouchDevice || d.goal === "other") return;
+        window.open(UPGRADER_LINK + d.goal, '_blank').focus();
+      });
     DOM.qRects
       .on("mouseenter", (event, d) => highlight({question: d.question}))
       .on("click", (event, d) => {
@@ -70,7 +76,7 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
         .on("circleclick", (event, i) => {
 
           if (!event?.detail) return;
-          if (isMobile()) return;
+          if (isTouchDevice) return;
 
           promptsPopup.update({
             view: DOM.promptsPopup, 
@@ -86,74 +92,89 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
     function highlight(spec){
   
       tracks.forEach(track => track.chart.render(spec));
-  
-      if(spec && spec.question){
-        DOM.qRects
-          .style("opacity", q => q.question === spec.question ? 1 : 0.1)
-      }
       
       if (!spec || spec.goal) {
         DOM.qRects.style("opacity", 1)
       }
   
       if(spec && spec.goal) {
-        const text = sdgGoalText[spec.goal];
-        const UPGRADER_LINK = "https://upgrader.gapminder.org/t/";
-
-        DOM.qDetails.html(`
-          <div class="info-image"></div>
-          <h2>${text.title}</h2>
-          <h1>${toSentenceCase(text.objective)}</h1>
-          <p>${text.description}</p>
-          <p><a src="${UPGRADER_LINK}" target="_blank">See topic on Upgrader app</a></p>
-        `);
-        DOM.qDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===spec.goal).image.src}>`)
-        DOM.qDetails.select("h2").style("color", sdgcolors[spec.goal]);
-        DOM.hints.style("display", "none");
-        DOM.intro.style("display", "none");
-        DOM.video.style("display", "none");
+        buildSdgDetails(spec.goal);
+        showHideTitleAndHint(false);
+        DOM.qDetails.style("display", "none").text("");
       }
       if(spec && spec.question) {
-        const questionProps = questionMap.get(spec.question);
-        const shortText = shortQNamesMap.get(spec.question);
-        const goal = questionProps.sdg_world_topics;
-        function getCorrectnessClassName(num){
-          if (num == 1) return "correct";
-          if (num == 2) return "wrong";
-          if (num == 3) return "verywrong";
-        }
-        function getCorrectnessText(num){
-          if (num == 1) return "Correct answer:";
-          if (num == 2) return "Wrong answer:";
-          if (num == 3) return "Very wrong answer:";
-        }
-        //<div class="info-image"></div>
-        DOM.qDetails.html(`
-          <p>${sdgGoalText[goal].title}, Question ${spec.question}</p>
-          <h2>${shortText}</h2>
-          <p>${questionProps.published_version_of_question || "The question probably had images in it, this app doesn't support it yet"}</p>
-          <p><span class="${getCorrectnessClassName(questionProps.option_a_correctness)}">
-            ${getCorrectnessText(questionProps.option_a_correctness)}
-          </span><br/>A. ${questionProps.option_a}</p>
-          <p><span class="${getCorrectnessClassName(questionProps.option_b_correctness)}">
-            ${getCorrectnessText(questionProps.option_b_correctness)}
-          </span><br/>B. ${questionProps.option_b}</p>
-          <p><span class="${getCorrectnessClassName(questionProps.option_c_correctness)}">
-            ${getCorrectnessText(questionProps.option_c_correctness)}
-          </span><br/>C. ${questionProps.option_c}</p>
-        `);
-        //DOM.qDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
-        DOM.qDetails.select("h2").style("color", sdgcolors[goal]);
-        DOM.hints.style("display", "none");
-        DOM.intro.style("display", "none");
-        DOM.video.style("display", "none");
+        DOM.qRects.style("opacity", q => q.question === spec.question ? 1 : 0.1)
+        buildQuestionDetails(spec.question);
+        showHideTitleAndHint(false);
+        DOM.sdgDetails.style("display", "none").text("");
       }
       if(!spec) {
-        DOM.hints.style("display", "block");
-        DOM.intro.style("display", "block");
-        DOM.video.style("display", "block");
-        DOM.qDetails.text("");
+        showHideTitleAndHint(true);
+        DOM.qDetails.style("display", "block").text("");
+        DOM.sdgDetails.style("display", "none").text("");
       }
+    }
+
+
+
+    function buildSdgDetails(goal){
+      const sdgProps = sdgGoalText[goal];
+
+      DOM.sdgDetails.style("display", "block").html(`
+        <div class="info-image"></div>
+        <h2>${sdgProps.title}</h2>
+        <h1>${toSentenceCase(sdgProps.objective)}</h1>
+        <p>${sdgProps.description}</p>
+      `);
+
+      if (isTouchDevice && goal !== "other")
+        DOM.sdgDetails.append("p").append("a")
+          .attr("href", UPGRADER_LINK + goal)
+          .attr("target", "_blank")
+          .text("See topic on Upgrader app");
+
+      DOM.sdgDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
+      DOM.sdgDetails.select("h2").style("color", sdgcolors[goal]);
+      
+    }
+
+    function buildQuestionDetails(question){
+      const questionProps = questionMap.get(question);
+      const shortText = shortQNamesMap.get(question);
+      const goal = questionProps.sdg_world_topics;
+      function getCorrectnessClassName(num){
+        if (num == 1) return "correct";
+        if (num == 2) return "wrong";
+        if (num == 3) return "verywrong";
+      }
+      function getCorrectnessText(num){
+        if (num == 1) return "Correct answer:";
+        if (num == 2) return "Wrong answer:";
+        if (num == 3) return "Very wrong answer:";
+      }
+      //<div class="info-image"></div>
+      DOM.qDetails.style("display", "block").html(`
+        <p>${sdgGoalText[goal].title}, Question ${question}</p>
+        <h2>${shortText}</h2>
+        <p>${questionProps.published_version_of_question || "The question probably had images in it, this app doesn't support it yet"}</p>
+        <p><span class="${getCorrectnessClassName(questionProps.option_a_correctness)}">
+          ${getCorrectnessText(questionProps.option_a_correctness)}
+        </span><br/>A. ${questionProps.option_a}</p>
+        <p><span class="${getCorrectnessClassName(questionProps.option_b_correctness)}">
+          ${getCorrectnessText(questionProps.option_b_correctness)}
+        </span><br/>B. ${questionProps.option_b}</p>
+        <p><span class="${getCorrectnessClassName(questionProps.option_c_correctness)}">
+          ${getCorrectnessText(questionProps.option_c_correctness)}
+        </span><br/>C. ${questionProps.option_c}</p>
+      `);
+      //DOM.qDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
+      DOM.qDetails.select("h2").style("color", sdgcolors[goal]);
+    }
+
+    function showHideTitleAndHint(show){
+      DOM.hints.style("display", show || isSmallScreen ? "block" : "none");
+      DOM.intro.style("display", show || isSmallScreen ? "inline-block" : "none");
+      DOM.video.style("display", show || isSmallScreen ? "inline-block" : "none");
     }
   
     //highlight(null);

@@ -30,7 +30,7 @@ const explanation = ({dsinfo = {}, introVideoPng, initialOverallCorrect}) => htm
   </svg>
   <p class="video">
   </p> 
-  <p class="hoverHint">We gave the chatbots some of our fact-questions. Hover circles to see which question they represent →</p>`
+  <p class="hoverHint">We gave the chatbots some of our fact-questions. Hover circles to see which question they represent:</p>`
 
 const explanationTopics = () => html`<p class="colorlegend">Color: UN Goals</p>`
 

@@ -88,7 +88,7 @@ const dataWithPrecomputedForceLayoutXY = d3.rollup(
 
 ```js
 function getChartWidth(){
-  if (isMobile())
+  if (isSmallScreen)
     return width;
   if (width / 5 <= 250)
     return width - 250;
@@ -97,21 +97,18 @@ function getChartWidth(){
 ```
 
 ```js
-function isMobile(){
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  const isSmallScreen = (width <= 768) || (window.innerHeight <= 768);
-  return isSmallScreen && isTouchDevice;
-}
-
+const isSmallScreen = (width <= 768) || (window.innerHeight <= 768);
+const isTouchDevice =  isSmallScreen//('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+const isMobile = isSmallScreen && isTouchDevice;
 ```
 
 ```js
 const nLanes = 8;
 const paddingTop = 20;
-const margin = {right: isMobile() ? 5:40, left: 20, top: 20, axis: 25};
+const margin = {right: isSmallScreen ? 5:40, left: 20, top: 20, axis: 25};
 const xScale = d3.scaleLinear([0, 100], [margin.left, getChartWidth() - margin.right - margin.left]);
 const canvasOverflow = 50;
-const singleChartHeight = isMobile() ? 200 : (window.innerHeight - margin.axis - margin.top - paddingTop)/nLanes - 1;
+const singleChartHeight = isSmallScreen ? 200 : (window.innerHeight - margin.axis - margin.top - paddingTop)/nLanes - 1;
 const headerShiftHeight = -10;
 ```
 
@@ -170,7 +167,7 @@ const tracks = tracksConfig.map(config => {
     margin,
     sdgcolors,
     sdgicons,
-    isMobile,
+    isTouchDevice,
     ...config
   });
   const header = BotHeader({
@@ -223,15 +220,18 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
       <div style="position:absolute; top:${singleChartHeight}px; right:${margin.right}px;" class="xaxistext">CORRECT ANSWERS</div>
       ${tracks.map(track => track.node)}
       
-      <img style="position:absolute; top:${isMobile() ? 0 : paddingTop - 10}px; left:calc(35% + ${isMobile() ? "70px" : "0px"}); width:60px" src="${botLogos["Chimp"].src}"/>
-      <div style="position:absolute; top:${isMobile() ? paddingTop + 30 : paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
+      <img style="position:absolute; top:${isSmallScreen ? 0 : paddingTop - 10}px; left:calc(35% + ${isSmallScreen ? "70px" : "0px"}); width:60px" src="${botLogos["Chimp"].src}"/>
+      <div style="position:absolute; top:${isSmallScreen ? paddingTop + 30 : paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
     </div>
 
     <div class="sidebar sidebar-bottom"> 
+      ${!isSmallScreen ? html.fragment`<div class="info-sdg-details"></div>` : ``}
       <div class="info-question-details"></div>
-
+      
       <div class="info-hint-topics">${explanationTopics()}</div>
       <div class="questions-section">${QuestionsCatalog({sdgicons, question, sdgcolors})}</div>
+
+      ${isSmallScreen ? html.fragment`<div class="info-sdg-details"></div>` : ``}
       <div class="info-menu">${infoMenu({questionSvg, infoSvg})}</div>
     </div>
 
@@ -244,7 +244,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
 
 ```js
   const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
-  interactivity({app, tracks,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isMobile});
+  interactivity({app, tracks,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isTouchDevice, isSmallScreen});
 ```
 
 

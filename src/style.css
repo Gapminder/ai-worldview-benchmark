@@ -8,6 +8,7 @@
   --font-medium: 20px;
   --font-small: 16px;
   --font-tiny: 14px;
+  --font-micro: 10px;
 }
 
 .correct {
@@ -32,13 +33,12 @@ html, body {
 .app-container{
   font-family: sans-serif;
   display:grid;
-  grid-template-rows: auto;
+  grid-template-rows: auto 1fr;
   grid-template-columns: minmax(250px, 20%) auto;
   grid-template-areas:
     "sidebar-top main-view"
     "sidebar-bottom main-view";
   column-gap: 20px;
-  row-gap: 20px;
   width: 100%;
   height: 100%;
   max-height: 100vh;
@@ -46,9 +46,8 @@ html, body {
   margin: auto;
 } 
 
-@media /* MOBILE LAYOUT */
-  (pointer: coarse) and (max-width: 768px),
-  (pointer: coarse) and (max-height: 768px)  {
+@media /* MOBILE LAYOUT  (pointer: coarse) and */
+  (max-width: 768px), (max-height: 768px)  {
   .app-container {
     grid-template-rows: auto auto auto;
     grid-template-columns: 1fr;        /* single column */
@@ -62,8 +61,6 @@ html, body {
 
 
 .sidebar {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   max-height: 100vh; /* SUPPOSEDLY Prevents it from growing beyond its parent */
   overflow: hidden;
@@ -75,15 +72,20 @@ html, body {
 }
 .sidebar-top {
   grid-area: sidebar-top;
+  align-self: start;
 }
 
 .sidebar-bottom {
   grid-area: sidebar-bottom;
+  display: flex;
+  flex-direction: column;
+  align-self: end;
+  height: 100%;
 }
 .info-static {
-  flex: none;
 }
 .info-static .title, .info-static .intro {
+  display: inline-block;
   width: 100%;
   max-width: 300px;
 }
@@ -93,12 +95,14 @@ html, body {
 }
 
 .info-static .video img {
+  display: inline-block;
   width: 100%;
   max-height: 250px;
 }
 
 .sidebar .hoverHint {
   font-size: var(--font-medium);
+  max-width: 460px;
 }
 .sidebar .colorlegend {
   font-size: var(--font-medium);
@@ -133,16 +137,25 @@ html, body {
 }
 .info-menu-item:hover a {color: blue;  text-decoration: underline;}
 .info-menu-item:hover svg {fill: blue; }
-.info-question-details {
+.info-question-details, .info-sdg-details {
   flex-grow: 1; 
   overflow: auto;
   min-height: 0; /* SUPPOSEDLY Ensures the child respects parent's boundaries */
   font-size: var(--font-medium);
 }
+.info-sdg-details {
+  margin-top: 50px
+};
 .info-question-details p,
-.info-question-details h2 {
+.info-question-details h2,
+.info-sdg-details p,
+.info-sdg-details h2 {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
+}
+.info-sdg-details a {
+  text-decoration: underline;
+  color: blue;
 }
 
 
