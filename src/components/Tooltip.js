@@ -4,7 +4,7 @@ import * as d3 from "npm:d3";
 const dx = 50;
 const h = 50;
 
-export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicons, isTouchDevice, margin, width, height, promptsPopup, canvasOverflow, activatePromptPopup}){
+export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicons, isTouchDevice, margin, width, height}){
   
   const div = d3.create("div")
     .attr("class", "tooltip")
@@ -55,7 +55,7 @@ export default function Tooltip({shortQNamesMap, questionMap, sdgcolors, sdgicon
       .text(shortTitile);
     correctPercent.text(Math.round(correct_rate) + "%");
     
-    linkToMore.style("display", model_configuration !== "humans" && isTouchDevice ? "block" : "none");
+    linkToMore.style("display", (model_configuration !== "humans" && isTouchDevice) ? "block" : "none");
   }
   function hide(){
     div.style("display", "none")
