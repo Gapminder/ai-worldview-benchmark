@@ -11,7 +11,6 @@ function forceLayout({
     yStrength = 0.02,
   }) {
     
-  
     const nodes = data.map((d) => ({
       ...d,
       x: xScale(x(d)),
