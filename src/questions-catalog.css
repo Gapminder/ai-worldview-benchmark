@@ -5,7 +5,7 @@
     flex: none;
   }
   .question-icon {
-    flex: 1 1 calc(15%); 
+    flex: 1 1 calc(14% + 2px); 
     margin: 2px; 
     box-sizing: border-box; 
     cursor: pointer;

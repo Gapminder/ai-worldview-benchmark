@@ -38,7 +38,7 @@ html, body {
   grid-template-areas:
     "sidebar-top main-view"
     "sidebar-bottom main-view";
-  column-gap: 20px;
+  column-gap: 15px;
   width: 100%;
   height: 100%;
   max-height: 100vh;
@@ -64,7 +64,6 @@ html, body {
   width: 100%;
   max-height: 100vh; /* SUPPOSEDLY Prevents it from growing beyond its parent */
   overflow: hidden;
-  padding-left: 10px;
   hyphens: auto;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
@@ -74,7 +73,6 @@ html, body {
   grid-area: sidebar-top;
   align-self: start;
 }
-
 .sidebar-bottom {
   grid-area: sidebar-bottom;
   display: flex;
@@ -82,7 +80,9 @@ html, body {
   align-self: end;
   height: 100%;
 }
-.info-static {
+.sidebar > div {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .info-static .title, .info-static .intro {
   display: inline-block;
