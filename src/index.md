@@ -102,36 +102,45 @@ const datapoints_prompt_variationMap = d3.group(datapoints_prompts, d => d.model
 ```js
 const dataWithPrecomputedForceLayoutXY = d3.rollup(
   datapoints_ratesWithHuman,
-  v => runForceSimulation({dataset: v, x: (d) => d.correct_rate, xScale, ticks: 10}),
+  v => runForceSimulation({dataset: v, x: (d) => d.correct_rate, xScale: layout.xScale, ticks: 10}),
   (d) => d.model_configuration
 );
 ```
 
 
 ```js
-function getChartWidth(){
-  if (isSmallScreen)
-    return width;
-  if (width / 5 <= 250)
-    return width - 250;
-  return Math.min(width * 4 /5, 2000*4/5);
-}
-```
 
-```js
-const isSmallScreen = (width <= 768) || (window.innerHeight <= 768);
-const isTouchDevice =  ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-const isMobile = isSmallScreen && isTouchDevice;
-```
+  const getChartWidth = (w,isSmallScreen) => {
+    if (isSmallScreen)
+      return w;
+    if (w / 5 <= 250)
+      return w - 250;
+    return Math.min(w * 4 /5, 2000*4/5);
+  }
+  const getLayout = (w = width, h = window.innerHeight) => {
+    const isTouchDevice =  navigator.maxTouchPoints & 0xFF;
+    const isSmallScreen = w <= 768 || h <= 768;
+    const paddingTop = 20;
+    const margin = {right: isSmallScreen ? 5:40, left: 20, top: 20, axis: 25};
+    const nlanes = 8;
 
-```js
-const nLanes = 8;
-const paddingTop = 20;
-const margin = {right: isSmallScreen ? 5:40, left: 20, top: 20, axis: 25};
-const xScale = d3.scaleLinear([0, 100], [margin.left, getChartWidth() - margin.right - margin.left]);
-const canvasOverflow = 50;
-const singleChartHeight = isSmallScreen ? 200 : (window.innerHeight - margin.axis - margin.top - paddingTop)/nLanes - 1;
-const headerShiftHeight = -10;
+    return {
+      chartWidth: getChartWidth(w,isSmallScreen),
+      xScale: d3.scaleLinear([0, 100], [margin.left, getChartWidth(w,isSmallScreen) - margin.right - margin.left]),
+      singleChartHeight: isSmallScreen ? 200 : (h - margin.axis - margin.top - paddingTop)/nlanes - 1,
+      isTouchDevice,
+      isSmallScreen,
+      margin,
+      paddingTop,
+      canvasOverflow: 50,
+      headerShiftHeight: -10,
+    }
+  }
+  const layout = Mutable(getLayout())
+  addEventListener("resize", (event) => {
+      layout.value = getLayout();
+  });
+
 ```
 
 ```js
@@ -156,8 +165,7 @@ function getInitialOverallCorrect(models){
 
 ```js 
 function getTracksConfig(){
-  const height = singleChartHeight;
-  const width = getChartWidth();
+  const { chartWidth: width, xScale, margin, singleChartHeight: height, canvasOverflow } = layout;
   function getData(vendor) {
     return dataWithPrecomputedForceLayoutXY.get(selectedModels[vendor])
   }
@@ -168,13 +176,13 @@ function getTracksConfig(){
       chimpLine: true,
       height: height + margin.axis + margin.top, marginTop: margin.top, marginBottom: margin.axis
     },
-    {fill, xScale, width, canvasOverflow, vendor: "Anthropic", data: getData("Anthropic"), height, spellOutAverage: true},
-    {fill, xScale, width, canvasOverflow, vendor: "OpenAI", data: getData("OpenAI"), height},
-    {fill, xScale, width, canvasOverflow, vendor: "Google", data: getData("Google"), height},
-    {fill, xScale, width, canvasOverflow, vendor: "DeepSeek", data: getData("DeepSeek"), height},
-    {fill, xScale, width, canvasOverflow, vendor: "Meta", data: getData("Meta"), height},
-    {fill, xScale, width, canvasOverflow, vendor: "Alibaba", data: getData("Alibaba"), height},
-    {fill, xScale, width, canvasOverflow, vendor: "XAI", data: getData("XAI"), height},
+    {fill, xScale, width, height, canvasOverflow, vendor: "Anthropic", data: getData("Anthropic"), spellOutAverage: true},
+    {fill, xScale, width, height, canvasOverflow, vendor: "OpenAI", data: getData("OpenAI")},
+    {fill, xScale, width, height, canvasOverflow, vendor: "Google", data: getData("Google")},
+    {fill, xScale, width, height, canvasOverflow, vendor: "DeepSeek", data: getData("DeepSeek")},
+    {fill, xScale, width, height, canvasOverflow, vendor: "Meta", data: getData("Meta")},
+    {fill, xScale, width, height, canvasOverflow, vendor: "Alibaba", data: getData("Alibaba")},
+    {fill, xScale, width, height, canvasOverflow, vendor: "XAI", data: getData("XAI")},
   ]
 }
 const tracksConfig = getTracksConfig()
@@ -182,6 +190,7 @@ const tracksConfig = getTracksConfig()
 
 
 ```js
+const {isTouchDevice, margin, headerShiftHeight} = layout;
 const tracks = tracksConfig.map(config => {
   const tooltip = Tooltip({
     questionMap,
@@ -228,6 +237,8 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
 
 
 ```js
+  const {isTouchDevice, chartWidth, isSmallScreen, xScale, margin, singleChartHeight, headerShiftHeight, paddingTop} = layout;
+
   const chimpText = "Monkeys would score 33% on our ABC questions, and humans do worse"
   const app = html`
   
@@ -238,7 +249,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
     </div>
 
     <div class="chart-section">
-      <div style="position:absolute; top:${singleChartHeight + paddingTop}px; left:0;" class="xaxis">${axis(xScale, getChartWidth())}</div>
+      <div style="position:absolute; top:${singleChartHeight + paddingTop}px; left:0;" class="xaxis">${axis(xScale, chartWidth)}</div>
       <div style="position:absolute; top:${singleChartHeight}px; right:${margin.right}px;" class="xaxistext">CORRECT ANSWERS</div>
       ${tracks.map(track => track.node)}
       
@@ -265,6 +276,8 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
 
 
 ```js
+  const { isTouchDevice, isSmallScreen } = layout;
+
   const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
   interactivity({app, tracks,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isTouchDevice, isSmallScreen});
 ```
