@@ -285,5 +285,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
 
 ```js
 d3.select(".spinner").remove();
-display(app)
+const meta = document.querySelector('meta[name="viewport"]');
+if (meta) meta.setAttribute('content', 'width=device-width, initial-scale=1, user-scalable=yes');
+display(app);
 ```
