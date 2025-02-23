@@ -109,24 +109,26 @@ const dataWithPrecomputedForceLayoutXY = d3.rollup(
 
 
 ```js
+  const checkIfSmallScreen = (w,h) => w <= 768 || h <= 768;
 
-  const getChartWidth = (w,isSmallScreen) => {
-    if (isSmallScreen)
+  const getChartWidth = (w,h) => {
+    if (checkIfSmallScreen(w,h))
       return w;
     if (w / 5 <= 250)
       return w - 250;
     return Math.min(w * 4 /5, 2000*4/5);
   }
-  const getLayout = (w = width, h = window.innerHeight) => {
+  const getLayout = (w = window.innerWidth, h = window.innerHeight) => {
     const isTouchDevice =  navigator.maxTouchPoints & 0xFF;
-    const isSmallScreen = w <= 768 || h <= 768;
+    const isSmallScreen = checkIfSmallScreen(w,h);
     const paddingTop = 20;
     const margin = {right: isSmallScreen ? 5:40, left: 20, top: 20, axis: 25};
     const nlanes = 8;
 
     return {
-      chartWidth: getChartWidth(w,isSmallScreen),
-      xScale: d3.scaleLinear([0, 100], [margin.left, getChartWidth(w,isSmallScreen) - margin.right - margin.left]),
+      w, h,
+      chartWidth: getChartWidth(w,h),
+      xScale: d3.scaleLinear([0, 100], [margin.left, getChartWidth(w,h) - margin.right - margin.left]),
       singleChartHeight: isSmallScreen ? 200 : (h - margin.axis - margin.top - paddingTop)/nlanes - 1,
       isTouchDevice,
       isSmallScreen,
@@ -138,7 +140,11 @@ const dataWithPrecomputedForceLayoutXY = d3.rollup(
   }
   const layout = Mutable(getLayout())
   addEventListener("resize", (event) => {
-      layout.value = getLayout();
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const isSmallScreen = checkIfSmallScreen(w,h);
+      if (layout.value.w !== w || layout.value.h !== h && !isSmallScreen || layout.value.isSmallScreen !== isSmallScreen)
+        layout.value = getLayout();
   });
 
 ```
