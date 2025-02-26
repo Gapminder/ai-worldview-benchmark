@@ -47,7 +47,6 @@ function forceLayout({
 
     const layoutToCache = runForceSimulation({data: dataset.get(modelConfig), x, xScale, ticks});
     cache[cacheKey] = layoutToCache;
-
     return layoutToCache;
   }
 
