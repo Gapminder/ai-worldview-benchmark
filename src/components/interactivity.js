@@ -2,7 +2,7 @@ import * as d3 from "npm:d3";
   
 const UPGRADER_LINK = "https://upgrader.gapminder.org/t/";
 
-export default function interactivity({app, tracks, sdgcolors, questionMap, shortQNamesMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isTouchDevice, isSmallScreen}){
+export default function interactivity({app, tracks, sdgcolors, questionMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isTouchDevice, isSmallScreen}){
 
     function toSentenceCase(str) {
       if (!str) return str; // Handle empty or null strings
@@ -149,7 +149,6 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
 
     function buildQuestionDetails(question){
       const questionProps = questionMap.get(question);
-      const shortText = shortQNamesMap.get(question);
       const goal = questionProps.sdg_world_topics;
       function getCorrectnessClassName(num){
         if (num == 1) return "correct";
@@ -164,7 +163,7 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, shor
       //<div class="info-image"></div>
       DOM.qDetails.style("display", "block").html(`
         <p>${sdgGoalText[goal].title}, Question ${question}</p>
-        <h2>${shortText}</h2>
+        <h2>${questionProps.short_title}</h2>
         <p>${questionProps.published_version_of_question || "The question probably had images in it, this app doesn't support it yet"}</p>
         <p><span class="${getCorrectnessClassName(questionProps.option_a_correctness)}">
           ${getCorrectnessText(questionProps.option_a_correctness)}

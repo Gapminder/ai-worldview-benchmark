@@ -200,7 +200,6 @@ const {isTouchDevice, margin, headerShiftHeight} = layout;
 const tracks = tracksConfig.map(config => {
   const tooltip = Tooltip({
     questionMap,
-    shortQNamesMap,
     margin,
     sdgcolors,
     sdgicons,
@@ -232,15 +231,6 @@ const tracks = tracksConfig.map(config => {
   
 })
 ```
-
-```js
-const docid = "1tR6y3LW1wDXqOK1ZK5teBY0c6XIhJOYhfLud4Hgk69M";
-const sheet = "Sheet2";
-const shortQuestionNames = await d3.csv(`https://docs.google.com/spreadsheets/d/${docid}/gviz/tq?tqx=out:csv&sheet=${sheet}&cache=${new Date()}`)
-const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_title"]])));
-
-```
-
 
 ```js
   const {isTouchDevice, chartWidth, isSmallScreen, xScale, margin, singleChartHeight, headerShiftHeight, paddingTop} = layout;
@@ -285,7 +275,7 @@ const shortQNamesMap = new Map(shortQuestionNames.map(m => ([+m.id, m["short_tit
   const { isTouchDevice, isSmallScreen } = layout;
 
   const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
-  interactivity({app, tracks,  sdgcolors, questionMap, shortQNamesMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isTouchDevice, isSmallScreen});
+  interactivity({app, tracks,  sdgcolors, questionMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isTouchDevice, isSmallScreen});
 ```
 
 
