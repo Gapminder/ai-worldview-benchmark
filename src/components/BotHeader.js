@@ -4,10 +4,10 @@ import * as d3 from "npm:d3";
 
 const dateFormatter = d3.utcFormat("%b %Y");
 
-export default function BotHeader({vendor, botLogos, model_configurationWithHuman, setSelectedModel, selectedModels, dataWithPrecomputedForceLayoutXY, left=0, top=0}){
+export default function BotHeader({vendor, botLogos, model_configurationWithHuman, setSelectedModel, selectedModels, modelConfigsThatHaveDatapoints, left=0, top=0}){
     function getModelOptions(vendor) {
       return model_configurationWithHuman
-        .filter(f => f.vendor === vendor && dataWithPrecomputedForceLayoutXY.has(f.model_configuration))
+        .filter(f => f.vendor === vendor && modelConfigsThatHaveDatapoints.includes(f.model_configuration))
         .toSorted((b,a) => a.model_publish_date - b.model_publish_date);
     }
     

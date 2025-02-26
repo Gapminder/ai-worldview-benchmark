@@ -65,7 +65,7 @@ style: style.css
 ];
 ```
 ```js
-import {runForceSimulation} from "./components/forceLayout.js"
+import {getCachedForceLayout} from "./components/forceLayout.js"
 import OneChartCanvas from "./components/oneChartCanvas.js"
 import BotHeader from "./components/BotHeader.js"
 import Tooltip from "./components/Tooltip.js"
@@ -86,7 +86,11 @@ const datapoints_correct_rate = await zip1.file("datapoints-rates.csv").csv({typ
 
 const model_configurationWithHumanMap = d3.rollup(model_configurationWithHuman, v=>v[0], d=>d.model_configuration)
 const human = question.map(m => ({question: m.question, model_configuration: "humans", correct_rate: 100-(+m.human_wrong_percentage)}))
-const datapoints_ratesWithHuman = datapoints_correct_rate.concat(human);
+const datapoints_ratesWHumanByModelConfigMap = d3.group(
+  datapoints_correct_rate.concat(human),
+  d => d.model_configuration
+)
+const modelConfigsThatHaveDatapoints = [...datapoints_ratesWHumanByModelConfigMap.keys()];
 const questionMap = d3.rollup(question, v=>v[0], d=>d.question);
 
 ```
@@ -98,15 +102,6 @@ const prompt_variations = await zip2.file("entities-promptvars.csv").csv({typed:
 const promptsMap = d3.rollup(prompt_variations, v=>v[0].question_prompt_template, d=>d.prompt_variation);
 const datapoints_prompt_variationMap = d3.group(datapoints_prompts, d => d.model_configuration, d=>d.question)
 ```
-
-```js
-const dataWithPrecomputedForceLayoutXY = d3.rollup(
-  datapoints_ratesWithHuman,
-  v => runForceSimulation({dataset: v, x: (d) => d.correct_rate, xScale: layout.xScale, ticks: 10}),
-  (d) => d.model_configuration
-);
-```
-
 
 ```js
   const checkIfSmallScreen = (w,h) => w <= 768 || h <= 768;
@@ -122,7 +117,7 @@ const dataWithPrecomputedForceLayoutXY = d3.rollup(
     const isTouchDevice =  navigator.maxTouchPoints & 0xFF;
     const isSmallScreen = checkIfSmallScreen(w,h);
     const paddingTop = 20;
-    const margin = {right: isSmallScreen ? 5:40, left: 20, top: 20, axis: 25};
+    const margin = {right: isSmallScreen ? 15:40, left: 20, top: 20, axis: 25};
     const nlanes = 8;
 
     return {
@@ -151,7 +146,7 @@ const dataWithPrecomputedForceLayoutXY = d3.rollup(
 
 ```js
 const rollup = d3.rollups(model_configurationWithHuman, v=>v.find(f => f["is--latest_model"])?.model_configuration, d => d.vendor)
-  .filter(([_, f]) => dataWithPrecomputedForceLayoutXY.has(f));
+  .filter(([_, f]) => modelConfigsThatHaveDatapoints.includes(f));
 const initialOverallCorrect = getInitialOverallCorrect(rollup.map(([vendor, model]) => model));
 const selectedModels = Mutable(Object.fromEntries(rollup));
 const setSelectedModel = (vendor, model)=>{
@@ -164,7 +159,7 @@ const setSelectedModel = (vendor, model)=>{
 function getInitialOverallCorrect(models){
   const everyModelCorrectness = models
     .filter(f => f !== "humans")
-    .map((model) => d3.mean( dataWithPrecomputedForceLayoutXY.get(model), d => d.correct_rate) );
+    .map((model) => d3.mean( datapoints_ratesWHumanByModelConfigMap.get(model), d => d.correct_rate) );
   return d3.mean(everyModelCorrectness);
 }
 ```
@@ -173,7 +168,13 @@ function getInitialOverallCorrect(models){
 function getTracksConfig(){
   const { chartWidth: width, xScale, margin, singleChartHeight: height, canvasOverflow } = layout;
   function getData(vendor) {
-    return dataWithPrecomputedForceLayoutXY.get(selectedModels[vendor])
+    return getCachedForceLayout({
+      dataset: datapoints_ratesWHumanByModelConfigMap, 
+      modelConfig: selectedModels[vendor], 
+      x: (d) => d.correct_rate, 
+      xScale: layout.xScale, 
+      ticks: 15
+    })
   }
 
   const fill = (d) => sdgcolors[questionMap.get(d.question).sdg_world_topics];
@@ -211,7 +212,7 @@ const tracks = tracksConfig.map(config => {
     selectedModels, 
     setSelectedModel,
     model_configurationWithHuman, 
-    dataWithPrecomputedForceLayoutXY, 
+    modelConfigsThatHaveDatapoints, 
     top: headerShiftHeight, 
     left: margin.left, 
     ...config

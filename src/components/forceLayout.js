@@ -1,5 +1,8 @@
 import * as d3 from "npm:d3";
-  
+
+const cache = {};
+const getCacheKey = (mc, scale) => mc + scale.range()[0] + scale.range()[1];
+
 function forceLayout({
     data,
     x = (d) => d.x,
@@ -28,9 +31,9 @@ function forceLayout({
     return {simulation, nodes};
   }
 
-  function runForceSimulation({dataset, x, xScale, ticks = 10}){
+  function runForceSimulation({data, x, xScale, ticks = 10}){
 
-    const forceLayoutInstance = forceLayout({data: dataset, x, xScale});
+    const forceLayoutInstance = forceLayout({data, x, xScale});
     
     for (let i = 0; i < ticks; i++) {
       forceLayoutInstance.simulation.tick();
@@ -38,4 +41,15 @@ function forceLayout({
     return forceLayoutInstance.nodes;
   }
 
-  export {runForceSimulation, forceLayout};
+  function getCachedForceLayout({dataset, modelConfig, x, xScale, ticks}){
+    const cacheKey = getCacheKey(modelConfig, xScale);
+    if (cache[cacheKey]) return cache[cacheKey];
+
+    const layoutToCache = runForceSimulation({data: dataset.get(modelConfig), x, xScale, ticks});
+    cache[cacheKey] = layoutToCache;
+
+    return layoutToCache;
+  }
+
+
+  export {runForceSimulation, forceLayout, getCachedForceLayout};
