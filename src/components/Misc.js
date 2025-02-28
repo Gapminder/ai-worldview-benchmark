@@ -29,6 +29,7 @@ const explanation = ({dsinfo = {}, introVideoPng, initialOverallCorrect}) => htm
     <text font-size=23px x=3 y=75>human misconceptions</text>
   </svg>
   <p class="video">
+    <iframe src="https://www.youtube.com/embed/gR0W0gM8gTY?si=03lXu_ts4tl-HM-c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </p> 
   <p class="hoverHint">We gave the chatbots some of our fact-questions. Hover circles to see which question they represent:</p>`
 
@@ -47,7 +48,7 @@ const infoMenu = ({questionSvg, infoSvg}) => {
   return html`
     <div class="info-menu-item">
       ${questionSvgParsed}
-      <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" target="_blank">How to use...</a>
+      <a href="https://www.youtube.com/watch?v=f-mI73E6P34" target="_blank">How to use...</a>
     </div>
     <div class="info-menu-item">
       ${infoSvgParsed}

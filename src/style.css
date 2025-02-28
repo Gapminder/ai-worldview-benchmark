@@ -94,10 +94,10 @@ html, body {
   font-family: sans-serif;
 }
 
-.info-static .video img {
+.info-static .video iframe {
   display: inline-block;
   width: 100%;
-  max-height: 250px;
+  aspect-ratio: 16/9;
 }
 
 .sidebar .hoverHint {
