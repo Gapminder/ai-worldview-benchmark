@@ -8,7 +8,7 @@ export default function Tooltip({questionMap, sdgcolors, sdgicons, isTouchDevice
   
   const div = d3.create("div")
     .attr("class", "tooltip")
-    .style("max-height", height + "px")
+    //.style("max-height", height + "px")
     .style("top", 0 + "px")
 
   const title = div.append("div")

@@ -6,16 +6,16 @@ style: style.css
 ---
 
 
-  <style>
-  .spinner {
-    animation: spin 0.5s linear infinite;
-    position: absolute;
-    left: 20px;
-    top: 20px;
-  }
-  @keyframes spin {
-    100% { transform: rotate(360deg); }
-  }
+<style>
+.spinner {
+  animation: spin 0.5s linear infinite;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
 </style>
 <svg class="spinner" width="75" height="75" viewBox="0 0 75 75">
   <g transform="translate(0,0)">

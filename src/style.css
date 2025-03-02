@@ -72,6 +72,7 @@ html, body {
 .sidebar-top {
   grid-area: sidebar-top;
   align-self: start;
+  padding-top: 10px;
 }
 .sidebar-bottom {
   grid-area: sidebar-bottom;
