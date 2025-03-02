@@ -2,7 +2,7 @@ import * as d3 from "npm:d3";
   
 const UPGRADER_LINK = "https://upgrader.gapminder.org/t/";
 
-export default function interactivity({app, tracks, sdgcolors, questionMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isTouchDevice, isSmallScreen}){
+export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isTouchDevice, isSmallScreen}){
 
     function toSentenceCase(str) {
       if (!str) return str; // Handle empty or null strings
@@ -12,7 +12,7 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, sdgG
   
     
     const DOM = {};
-    DOM.container = d3.select(app);
+    DOM.container = d3.select(".app-container");
     DOM.questionsSection = DOM.container.select(".questions-section");
     DOM.qIconContainer = DOM.container.select(".question-icon-container");
     DOM.qPileContainer = DOM.container.select(".question-pile-container");

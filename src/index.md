@@ -70,7 +70,7 @@ import OneChartCanvas from "./components/oneChartCanvas.js"
 import BotHeader from "./components/BotHeader.js"
 import Tooltip from "./components/Tooltip.js"
 import QuestionsCatalog from "./components/QuestionsCatalog.js"
-import {axis, explanation, explanationTopics, infoMenu} from "./components/Misc.js"
+import {axis, explanation, chartSection, explanationTopics, infoMenu} from "./components/Misc.js"
 import {botLogos, sdgGoalText, sdgcolors, sdgicons, introVideoPng, questionSvg, infoSvg} from "./components/references.js"
 import interactivity from "./components/interactivity.js"
 import promptsPopup from "./components/PropmptsPopup.js"
@@ -233,50 +233,30 @@ const tracks = tracksConfig.map(config => {
 })
 ```
 
-```js
-  const {isTouchDevice, chartWidth, isSmallScreen, xScale, margin, singleChartHeight, headerShiftHeight, paddingTop} = layout;
+<div class="grid app-container" lang="en">
 
-  const chimpText = "Monkeys would score 33% on our ABC questions, and humans do worse"
-  const app = html`
-  
-  <div class="app-container" lang="en">
+  <div class="card sidebar sidebar-top">${explanation({dsinfo, initialOverallCorrect})}</div>
 
-    <div class="sidebar sidebar-top"> 
-      <div class="info-static">${explanation({dsinfo, introVideoPng, initialOverallCorrect})}</div>
-    </div>
+  <div class="card chart-section">${chartSection({layout, tracks, botLogos})}</div>
 
-    <div class="chart-section">
-      <div style="position:absolute; top:${singleChartHeight + paddingTop}px; left:0;" class="xaxis">${axis(xScale, chartWidth)}</div>
-      <div style="position:absolute; top:${singleChartHeight}px; right:${margin.right}px;" class="xaxistext">CORRECT ANSWERS</div>
-      ${tracks.map(track => track.node)}
-      
-      <img style="position:absolute; top:${isSmallScreen ? 0 : paddingTop - 10}px; left:calc(35% + ${isSmallScreen ? "70px" : "0px"}); width:60px" src="${botLogos["Chimp"].src}"/>
-      <div style="position:absolute; top:${isSmallScreen ? paddingTop + 30 : paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
-    </div>
-
-    <div class="sidebar sidebar-bottom"> 
-      ${!isSmallScreen ? html.fragment`<div class="info-sdg-details"></div>` : ``}
-      <div class="info-question-details"></div>
-      
-      <div class="info-hint-topics">${explanationTopics()}</div>
-      <div class="questions-section">${QuestionsCatalog({sdgicons, question, sdgcolors})}</div>
-
-      ${isSmallScreen ? html.fragment`<div class="info-sdg-details"></div>` : ``}
-      <div class="info-menu">${infoMenu({questionSvg, infoSvg})}</div>
-    </div>
-
-    <div class="prompts-popup-flexbox"><div class="prompts-popup"></div></div>
-
+  <div class="card sidebar sidebar-bottom">   
+    ${!layout.isSmallScreen ? html.fragment`<div class="info-sdg-details"></div>` : ``}
+    <div class="info-question-details"></div>  
+    <div class="info-hint-topics">${explanationTopics()}</div>
+    <div class="questions-section">${QuestionsCatalog({sdgicons, question, sdgcolors})}</div>
+    ${layout.isSmallScreen ? html.fragment`<div class="info-sdg-details"></div>` : ``}
+    <div class="info-menu">${infoMenu({questionSvg, infoSvg})}</div>
   </div>
-  `
-```
+
+  <div class="prompts-popup-flexbox"><div class="prompts-popup"></div></div>
+</div>
 
 
 ```js
   const { isTouchDevice, isSmallScreen } = layout;
 
   const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
-  interactivity({app, tracks,  sdgcolors, questionMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isTouchDevice, isSmallScreen});
+  interactivity({tracks, sdgcolors, questionMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isTouchDevice, isSmallScreen});
 ```
 
 
@@ -284,5 +264,4 @@ const tracks = tracksConfig.map(config => {
 d3.select(".spinner").remove();
 const meta = document.querySelector('meta[name="viewport"]');
 if (meta) meta.setAttribute('content', 'width=device-width, initial-scale=1, user-scalable=yes');
-display(app);
 ```

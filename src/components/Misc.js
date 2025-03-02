@@ -12,7 +12,7 @@ const axis = (xScale, width) => {
 
 const dateFormatter = d3.utcFormat("%b %d %Y");
 
-const explanation = ({dsinfo = {}, introVideoPng, initialOverallCorrect}) => html`<h1></h1>
+const explanation = ({dsinfo = {}, initialOverallCorrect}) => html`<div class="info-static">
   <svg class="title" viewBox="0 0 245 85" preserveAspectRatio="xMinYMin meet">
     <path
     style="fill:#1fa0a9;fill-opacity:1"
@@ -31,10 +31,31 @@ const explanation = ({dsinfo = {}, introVideoPng, initialOverallCorrect}) => htm
   <div class="video">
     <iframe src="https://www.youtube.com/embed/D7e1d16da0A?si=D1X3j_ehFLRBKjEl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div> 
-  <p class="hoverHint">We gave the chatbots some of our fact-questions. Hover circles to see which question they represent:</p>`
+  <p class="hoverHint">We gave the chatbots some of our fact-questions. Hover circles to see which question they represent:</p>
+</div>`
 
 const explanationTopics = () => html`<p class="colorlegend">Color: UN Goals</p>`
 
+
+const chartSection = ({layout, tracks, botLogos}) => {
+  const {chartWidth, isSmallScreen, xScale, margin, singleChartHeight, headerShiftHeight, paddingTop} = layout;
+  const chimpText = "Monkeys would score 33% on our ABC questions, and humans do worse"
+  
+  const chimpIcon = botLogos["Chimp"];
+  d3.select(chimpIcon)
+    .attr("class", "chimp")
+    .style("top", `${isSmallScreen ? 0 : paddingTop - 10}px`)
+    .style("left", `calc(35% + ${isSmallScreen ? "70px" : "0px"})`);
+
+  return html`
+    <div style="position:absolute; top:${singleChartHeight + paddingTop}px; left:0;" class="xaxis">${axis(xScale, chartWidth)}</div>
+    <div style="position:absolute; top:${singleChartHeight}px; right:${margin.right}px;" class="xaxistext">CORRECT ANSWERS</div>
+    ${tracks.map(track => track.node)}
+      
+    ${chimpIcon}
+    <div style="position:absolute; top:${isSmallScreen ? paddingTop + 30 : paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
+  `
+}
 
 const infoMenu = ({questionSvg, infoSvg}) => {
   const parser = new DOMParser();
@@ -57,4 +78,4 @@ const infoMenu = ({questionSvg, infoSvg}) => {
   `;
 };
 
-export {axis, explanation, explanationTopics, infoMenu}
+export {axis, explanation, explanationTopics, infoMenu, chartSection}

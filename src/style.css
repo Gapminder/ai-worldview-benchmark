@@ -177,6 +177,10 @@ html, body {
   z-index: 0;
   /*border: 1px solid red;*/
 }
+.chart-section .chimp {
+  position: absolute;
+  width: 60px;
+}
 
 canvas {
   /*border: 1px solid green;*/
