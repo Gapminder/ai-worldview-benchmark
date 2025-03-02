@@ -233,11 +233,18 @@ const tracks = tracksConfig.map(config => {
 })
 ```
 
+```js
+const callback = () => {
+  d3.select(".spinner").remove();
+  d3.select(".app-container").style("visibility", "unset");
+}
+```
+
 <div class="grid app-container" lang="en">
 
   <div class="card sidebar sidebar-top">${explanation({dsinfo, initialOverallCorrect})}</div>
 
-  <div class="card chart-section">${chartSection({layout, tracks, botLogos, callback: () => d3.select(".spinner").remove()})}</div>
+  <div class="card chart-section">${chartSection({layout, tracks, botLogos, callback})}</div>
 
   <div class="card sidebar sidebar-bottom">   
     ${!layout.isSmallScreen ? html.fragment`<div class="info-sdg-details"></div>` : ``}
