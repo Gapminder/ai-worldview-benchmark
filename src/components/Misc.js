@@ -37,7 +37,7 @@ const explanation = ({dsinfo = {}, initialOverallCorrect}) => html`<div class="i
 const explanationTopics = () => html`<p class="colorlegend">Color: UN Goals</p>`
 
 
-const chartSection = ({layout, tracks, botLogos}) => {
+const chartSection = ({layout, tracks, botLogos, callback}) => {
   const {chartWidth, isSmallScreen, xScale, margin, singleChartHeight, headerShiftHeight, paddingTop} = layout;
   const chimpText = "Monkeys would score 33% on our ABC questions, and humans do worse"
   
@@ -47,14 +47,16 @@ const chartSection = ({layout, tracks, botLogos}) => {
     .style("top", `${isSmallScreen ? 0 : paddingTop - 10}px`)
     .style("left", `calc(35% + ${isSmallScreen ? "70px" : "0px"})`);
 
-  return html`
-    <div style="position:absolute; top:${singleChartHeight + paddingTop}px; left:0;" class="xaxis">${axis(xScale, chartWidth)}</div>
-    <div style="position:absolute; top:${singleChartHeight}px; right:${margin.right}px;" class="xaxistext">CORRECT ANSWERS</div>
-    ${tracks.map(track => track.node)}
-      
-    ${chimpIcon}
-    <div style="position:absolute; top:${isSmallScreen ? paddingTop + 30 : paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
-  `
+  const result = html`
+  <div style="position:absolute; top:${singleChartHeight + paddingTop}px; left:0;" class="xaxis">${axis(xScale, chartWidth)}</div>
+  <div style="position:absolute; top:${singleChartHeight}px; right:${margin.right}px;" class="xaxistext">CORRECT ANSWERS</div>
+  ${tracks.map(track => track.node)}
+    
+  ${chimpIcon}
+  <div style="position:absolute; top:${isSmallScreen ? paddingTop + 30 : paddingTop}px; left:calc(35% + 70px); color:#FFCB34">${chimpText}</div>
+  `;
+  callback();
+  return result;
 }
 
 const infoMenu = ({questionSvg, infoSvg}) => {

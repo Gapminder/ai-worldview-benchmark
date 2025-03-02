@@ -237,7 +237,7 @@ const tracks = tracksConfig.map(config => {
 
   <div class="card sidebar sidebar-top">${explanation({dsinfo, initialOverallCorrect})}</div>
 
-  <div class="card chart-section">${chartSection({layout, tracks, botLogos})}</div>
+  <div class="card chart-section">${chartSection({layout, tracks, botLogos, callback: () => d3.select(".spinner").remove()})}</div>
 
   <div class="card sidebar sidebar-bottom">   
     ${!layout.isSmallScreen ? html.fragment`<div class="info-sdg-details"></div>` : ``}
@@ -261,7 +261,6 @@ const tracks = tracksConfig.map(config => {
 
 
 ```js
-d3.select(".spinner").remove();
 const meta = document.querySelector('meta[name="viewport"]');
 if (meta) meta.setAttribute('content', 'width=device-width, initial-scale=1, user-scalable=yes');
 ```
