@@ -94,7 +94,7 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
     
       const vendor = model_configurationWithHumanMap.get(model).vendor;
       const modelName = model_configurationWithHumanMap.get(model).model_name;
-      view.append("img").attr("src", botLogos[vendor].src)
+      view.append(() => botLogos[vendor])
         .style("width", "40px")
         .style("height", "40px")
         .style("position", "relative")

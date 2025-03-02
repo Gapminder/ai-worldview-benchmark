@@ -142,7 +142,7 @@ export default function interactivity({app, tracks, sdgcolors, questionMap, sdgG
           .attr("target", "_blank")
           .text("See topic on Upgrader app");
 
-      DOM.sdgDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
+      DOM.sdgDetails.select(".info-image").append(() => sdgicons.find(f => f.goal===goal).image);
       DOM.sdgDetails.select("h2").style("color", sdgcolors[goal]);
       
     }

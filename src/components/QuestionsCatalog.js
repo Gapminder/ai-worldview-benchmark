@@ -16,7 +16,8 @@ export default function QuestionsCatalog({
       .attr("class", "question-icon")
       .append("a")
       .style("pointer-events", d => d.goal === "other" ? "none" : null)
-      .append(d => d.image)
+      .append("img")
+      .attr("src", d => d.image.src)
   
     // const questionPiles = d3.create("div");
   

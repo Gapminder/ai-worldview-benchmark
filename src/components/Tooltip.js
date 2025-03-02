@@ -15,8 +15,6 @@ export default function Tooltip({questionMap, sdgcolors, sdgicons, isTouchDevice
     .attr("class", "title")
   const icon = div.append("div")
     .attr("class", "icon")
-    .append("img")
-    .attr("crossorigin", "anonymous");
   const correctText = div.append("div")
     .attr("class", "correct-text")
     .text("correct answers")
@@ -48,7 +46,8 @@ export default function Tooltip({questionMap, sdgcolors, sdgicons, isTouchDevice
         .style("max-width", (x - dx) + "px")
         .classed("rtl", true);
 
-    icon.attr("src", sdgicons.find(f => f.goal===goal).image.src);
+    icon.selectAll("img").remove();
+    icon.append(() => sdgicons.find(f => f.goal===goal).image);
     title
       .style("color", sdgcolors[goal])
       .text(questionProps.short_title);
