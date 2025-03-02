@@ -28,9 +28,9 @@ const explanation = ({dsinfo = {}, introVideoPng, initialOverallCorrect}) => htm
     <text font-size=23px x=3 y=50>suffering from some</text>
     <text font-size=23px x=3 y=75>human misconceptions</text>
   </svg>
-  <p class="video">
-    <iframe src="https://www.youtube.com/embed/gR0W0gM8gTY?si=03lXu_ts4tl-HM-c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-  </p> 
+  <div class="video">
+    <iframe src="https://www.youtube.com/embed/D7e1d16da0A?si=D1X3j_ehFLRBKjEl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div> 
   <p class="hoverHint">We gave the chatbots some of our fact-questions. Hover circles to see which question they represent:</p>`
 
 const explanationTopics = () => html`<p class="colorlegend">Color: UN Goals</p>`

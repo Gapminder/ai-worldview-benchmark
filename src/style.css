@@ -94,6 +94,11 @@ html, body {
   font-family: sans-serif;
 }
 
+.info-static .video {
+  display: inline-block;
+  width: 100%;
+  max-width: 500px;
+}
 .info-static .video iframe {
   display: inline-block;
   width: 100%;
