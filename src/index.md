@@ -184,10 +184,11 @@ function getTracksConfig(){
       height: height + margin.axis + margin.top, marginTop: margin.top, marginBottom: margin.axis
     },
     {fill, xScale, width, height, canvasOverflow, vendor: "Anthropic", data: getData("Anthropic"), spellOutAverage: true},
-    {fill, xScale, width, height, canvasOverflow, vendor: "OpenAI", data: getData("OpenAI")},
+    
     {fill, xScale, width, height, canvasOverflow, vendor: "Google", data: getData("Google")},
     {fill, xScale, width, height, canvasOverflow, vendor: "DeepSeek", data: getData("DeepSeek")},
     {fill, xScale, width, height, canvasOverflow, vendor: "Meta", data: getData("Meta")},
+    {fill, xScale, width, height, canvasOverflow, vendor: "OpenAI", data: getData("OpenAI")},
     {fill, xScale, width, height, canvasOverflow, vendor: "Alibaba", data: getData("Alibaba")},
     {fill, xScale, width, height, canvasOverflow, vendor: "XAI", data: getData("XAI")},
   ]
