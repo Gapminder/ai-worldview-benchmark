@@ -14,9 +14,20 @@ Then visit <http://localhost:3000> to preview the app. For more, see [the docs](
 ## Deploy instructions
 ⚠️ This is unusual: the app won't automatically show the new data when it updates on [github repo](https://github.com/open-numbers/ddf--gapminder--ai_worldview_benchmark.git). It caches the data itself and needs to be redeployed.
 
-Angie, Dab, Ola, Semio have access to [Gapminder workspace](https://observablehq.com/@gapminder) on Observable. Log in, see [Data Apps](https://observablehq.com/projects/@gapminder/ai-worldview-benchmark/deploys ) and press "Deploy" button:
+~Angie, Dab, Ola, Semio have access to [Gapminder workspace](https://observablehq.com/@gapminder) on Observable. Log in, see [Data Apps](https://observablehq.com/projects/@gapminder/ai-worldview-benchmark/deploys ) and press "Deploy" button~
 
-Also, pushing to `master` branch on GitHub will trigger the redeploy
+~Also, pushing to `master` branch on GitHub will trigger the redeploy~
+
+This is for now not available due to the [issue in Observable framework deploy](https://github.com/observablehq/framework/discussions/1919#discussioncomment-12324803)
+
+So deploy manually by setting up this repo on your computer:
+
+```sh
+npm install
+npm run clean
+npm run build
+npm run deploy
+```
 
 ## Project structure
 
