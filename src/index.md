@@ -90,6 +90,12 @@ const datapoints_ratesWHumanByModelConfigMap = d3.group(
   datapoints_correct_rate.concat(human),
   d => d.model_configuration
 )
+
+//modify data: add correctness
+for (let [model_id, model] of model_configurationWithHumanMap) {
+  model.correctness = d3.mean(datapoints_ratesWHumanByModelConfigMap.get(model_id), d => d.correct_rate);
+}
+
 const modelConfigsThatHaveDatapoints = [...datapoints_ratesWHumanByModelConfigMap.keys()];
 const questionMap = d3.rollup(question, v=>v[0], d=>d.question);
 
@@ -145,24 +151,25 @@ const datapoints_prompt_variationMap = d3.group(datapoints_prompts, d => d.model
 ```
 
 ```js
-const rollup = d3.rollups(model_configurationWithHuman, v=>v.find(f => f["is--latest_model"])?.model_configuration, d => d.vendor)
-  .filter(([_, f]) => modelConfigsThatHaveDatapoints.includes(f));
-const initialOverallCorrect = getInitialOverallCorrect(rollup.map(([vendor, model]) => model));
-const selectedModels = Mutable(Object.fromEntries(rollup));
+const initiallySelectedModelsByVendor = d3.rollups(
+  model_configurationWithHuman.filter(f => modelConfigsThatHaveDatapoints.includes(f.model_configuration)), 
+  v=>v.toSorted((a,b) => b.correctness - a.correctness)[0].model_configuration,
+  d => d.vendor
+);
+
+const initialVendorList = initiallySelectedModelsByVendor.sort(
+  ([vendor_a, model_a],[vendor_b, model_b]) => model_configurationWithHumanMap.get(model_b).correctness - model_configurationWithHumanMap.get(model_a).correctness
+).map(([vendor, model]) => vendor).filter(f => f!== "Humans");
+
+const initialOverallCorrect = d3.mean(initiallySelectedModelsByVendor.map(([vendor, model_id]) => model_configurationWithHumanMap.get(model_id).correctness));
+
+const selectedModels = Mutable(Object.fromEntries(initiallySelectedModelsByVendor));
 const setSelectedModel = (vendor, model)=>{
   const newSelectedModels = Object.assign({}, selectedModels.value, {[vendor]: model});
   selectedModels.value = newSelectedModels;
 }
 ```
 
-```js
-function getInitialOverallCorrect(models){
-  const everyModelCorrectness = models
-    .filter(f => f !== "humans")
-    .map((model) => d3.mean( datapoints_ratesWHumanByModelConfigMap.get(model), d => d.correct_rate) );
-  return d3.mean(everyModelCorrectness);
-}
-```
 
 ```js 
 function getTracksConfig(){
@@ -182,16 +189,10 @@ function getTracksConfig(){
     {fill, xScale, width, canvasOverflow, vendor: "Humans", data: getData("Humans"), averageMarkColor: "#333",
       chimpLine: true,
       height: height + margin.axis + margin.top, marginTop: margin.top, marginBottom: margin.axis
-    },
-    {fill, xScale, width, height, canvasOverflow, vendor: "Anthropic", data: getData("Anthropic"), spellOutAverage: true},
-    
-    {fill, xScale, width, height, canvasOverflow, vendor: "Google", data: getData("Google")},
-    {fill, xScale, width, height, canvasOverflow, vendor: "DeepSeek", data: getData("DeepSeek")},
-    {fill, xScale, width, height, canvasOverflow, vendor: "Meta", data: getData("Meta")},
-    {fill, xScale, width, height, canvasOverflow, vendor: "OpenAI", data: getData("OpenAI")},
-    {fill, xScale, width, height, canvasOverflow, vendor: "Alibaba", data: getData("Alibaba")},
-    {fill, xScale, width, height, canvasOverflow, vendor: "XAI", data: getData("XAI")},
-  ]
+    }]
+    .concat(initialVendorList.map((vendor, index) => ({
+      fill, xScale, width, height, canvasOverflow, vendor, data: getData(vendor), spellOutAverage: index === 0
+    })))
 }
 const tracksConfig = getTracksConfig()
 ```
