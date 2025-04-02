@@ -57,6 +57,8 @@ style: style.css
   FileAttachment("./assets/botlogos/meta.png"),
   FileAttachment("./assets/botlogos/xai.png"),
   FileAttachment("./assets/botlogos/deepseek.png"),
+  FileAttachment("./assets/botlogos/mistral.png"),
+  FileAttachment("./assets/botlogos/perplexity.png"),
   FileAttachment("./assets/botlogos/chimp.png"),
 
   FileAttachment("./assets/intro-video-thumbnail.png"),

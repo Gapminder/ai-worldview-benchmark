@@ -12,6 +12,8 @@ const botLogos = ({
   "Meta": await FileAttachment("./assets/botlogos/meta.png").image(),
   "XAI": await FileAttachment("./assets/botlogos/xai.png").image(),
   "DeepSeek": await FileAttachment("./assets/botlogos/deepseek.png").image(),
+  "Mistral": await FileAttachment("./assets/botlogos/mistral.png").image(),
+  "Perplexity": await FileAttachment("./assets/botlogos/perplexity.png").image(),
   "Chimp": await FileAttachment("./assets/botlogos/chimp.png").image()
 })
 
