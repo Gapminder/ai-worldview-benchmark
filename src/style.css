@@ -87,7 +87,8 @@ html, body {
   padding-right: 10px;
 }
 .info-static .title, .info-static .intro {
-  display: inline-block;
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
   max-width: 300px;
 }
