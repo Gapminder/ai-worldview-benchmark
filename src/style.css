@@ -173,8 +173,17 @@ html, body {
   grid-area: main-view;
   padding-top: 20px;
   position: relative; 
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
+
+@media /* MOBILE LAYOUT  (pointer: coarse) and */
+  (max-width: 768px), (max-height: 768px)  {
+  .chart-section {
+    overflow-y: hidden;
+  }
+}
+
 .chart-section .track {
   position: relative;
   z-index: 0;

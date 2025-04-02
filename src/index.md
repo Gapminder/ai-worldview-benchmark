@@ -126,7 +126,20 @@ const datapoints_prompt_variationMap = d3.group(datapoints_prompts, d => d.model
     const isSmallScreen = checkIfSmallScreen(w,h);
     const paddingTop = 20;
     const margin = {right: isSmallScreen ? 15:40, left: 20, top: 20, axis: 25};
-    const nlanes = 8;
+    let nlanes = 9;
+
+    if (!isSmallScreen){
+      if (h < 1200) nlanes = 8;
+      if (h < 1050) nlanes = 7;
+      if (h < 900) nlanes = 6;
+      if (h < 750) nlanes = 5;
+      if (h < 600) nlanes = 4;
+      if (h < 450) nlanes = 3;
+      if (h < 300) nlanes = 2;
+      if (h < 150) nlanes = 1;
+    }
+
+    console.log((h - margin.axis - margin.top - paddingTop)/nlanes - 1)
 
     return {
       w, h,
