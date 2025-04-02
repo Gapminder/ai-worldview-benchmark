@@ -139,8 +139,6 @@ const datapoints_prompt_variationMap = d3.group(datapoints_prompts, d => d.model
       if (h < 150) nlanes = 1;
     }
 
-    console.log((h - margin.axis - margin.top - paddingTop)/nlanes - 1)
-
     return {
       w, h,
       chartWidth: getChartWidth(w,h),
