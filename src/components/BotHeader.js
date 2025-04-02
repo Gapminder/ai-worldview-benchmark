@@ -37,7 +37,7 @@ export default function BotHeader({vendor, botLogos, model_configurationWithHuma
         .data(modelOptions)
         .join("option")
         .attr("value", d => d.model_configuration)
-        .text(d => `${d.model_name} in ${dateFormatter(d.model_publish_date)}`)
+        .text(d => `${d.model_name} of ${dateFormatter(d.model_publish_date)}`)
     
       select.property('value', selectedModels[vendor]);
       select.on("change", event => {
