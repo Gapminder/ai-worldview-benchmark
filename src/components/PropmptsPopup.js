@@ -53,10 +53,6 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
         .domain(["correct","wrong", "very_wrong", "fail", "n/a"])
         .range(["darkgreen", "#dd8757", "#ff2626", "grey", "blue"])
   
-      const cOptionScale = d3.scaleOrdinal()
-        .domain(["1","2", "3", "fail", "n/a"])
-        .range(["darkgreen", "#dd8757", "#ff2626", "grey", "blue"])
-    
       const tscale = d3.scaleOrdinal()
         .domain(["correct","wrong", "very_wrong", "fail", "n/a"])
         .range(["Correct","Wrong", "Very wrong", "Failed", "n/a"])
@@ -66,10 +62,10 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
         .range(["🟢","🟠", "🔴", "⚪️", "🔵"])
     
       
-      function getCorrectnessClassName(num){
-        if (num == 1) return "correct";
-        if (num == 2) return "wrong";
-        if (num == 3) return "verywrong";
+      function getCorrectnessColor(num){
+        if (num == 1) return "darkgreen";
+        if (num == 2) return "#dd8757";
+        if (num == 3) return "#ff2626";
       }
       function getCorrectnessText(num){
         if (num == 1) return "Correct";
@@ -249,13 +245,13 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
         promptContainer.append("div")
           .style("font-size", "0.7em")
           .html(`
-            <span style="color: ${cOptionScale(questionProps.option_a_correctness)}">
+            <span style="color: ${getCorrectnessColor(questionProps.option_a_correctness)}">
               A (${getCorrectnessText(questionProps.option_a_correctness)}). ${questionProps.option_a}
             </span>,     
-            <span style="color: ${cOptionScale(questionProps.option_b_correctness)}">
+            <span style="color: ${getCorrectnessColor(questionProps.option_b_correctness)}">
               B (${getCorrectnessText(questionProps.option_b_correctness)}). ${questionProps.option_b}
             </span>,
-            <span style="color: ${cOptionScale(questionProps.option_c_correctness)}">
+            <span style="color: ${getCorrectnessColor(questionProps.option_c_correctness)}">
               C (${getCorrectnessText(questionProps.option_c_correctness)}). ${questionProps.option_c}
             </span>.
           `)
