@@ -16,8 +16,8 @@ export default function BotHeader({vendor, botLogos, model_configurationWithHuma
       .style("left", `${left-5}px`)
     
     div.append("div").attr("class", "logo")
-      .append(() => botLogos[vendor])
-      //.style("width", "50px")
+      .append("img")
+      .attr("src", botLogos[vendor].src)
       .style("height", "100%")
   
     div.append("div").attr("class", "title")
