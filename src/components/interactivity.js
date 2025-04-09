@@ -25,6 +25,15 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
     DOM.video = DOM.container.selectAll(".video");
     DOM.promptsPopup = DOM.container.select(".prompts-popup");
   
+    DOM.qDetails.on("click", () => {
+      setSelected(null); 
+      highlight();
+    })
+    DOM.sdgDetails.on("click", () => {
+      setSelected(null); 
+      highlight();
+    })
+
     DOM.questionsSection
       .on("mouseleave", () => {
         if (isTouchDevice) return;
