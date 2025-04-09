@@ -106,9 +106,15 @@ export default function OneChartCanvas({
       lastHoveredIndex = hoveredIndex;
     });
   
-    canvas.addEventListener("click", (event) => {
+    canvas.addEventListener("pointerup", (event) => {
       const hoveredIndex = getNearestIndex(event);
-      canvas.dispatchEvent(new CustomEvent("circleclick", { detail: data[hoveredIndex] }));
+      if (event.pointerType === "touch")
+        canvas.dispatchEvent(new CustomEvent("circletouch", { detail: data[hoveredIndex] }));
+      else
+        canvas.dispatchEvent(new CustomEvent("circleclick", { detail: data[hoveredIndex] }));
+    });
+
+    canvas.addEventListener("touchend", (event) => {
     });
   
     function getNearestIndex(event){

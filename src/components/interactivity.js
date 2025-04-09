@@ -66,35 +66,43 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
 
       d3.select(track.chart.node)
         .on("circlehover", (event, i) => {
+          if (isTouchDevice) return;
+          const question = event?.detail?.question || null;
+          
+          if (question) {
+            track.tooltip.show(event.detail);
+            trackNode.style("z-index", 1);
+          } else {
+            track.tooltip.hide();
+          }
+          highlight({question});
+
+        })
+        .on("circleclick", event => {
+          updatePropmptsPopup(event?.detail);
+        })
+        .on("circletouch", event => {
           const question = event?.detail?.question || null;
           if (question) {
             track.tooltip.show(event.detail);
             trackNode.style("z-index", 1);
             track.tooltip.clickToMore(()=>{
-              promptsPopup.update({
-                view: DOM.promptsPopup, 
-                question: question, 
-                model: event?.detail?.model_configuration
-                })
+              updatePropmptsPopup(event.detail);              
             })
           } else {
             track.tooltip.hide();
-          }
-
-          highlight({question});
-        })
-        .on("circleclick", (event, i) => {
-
-          if (!event?.detail) return;
-          if (isTouchDevice) return;
-
-          promptsPopup.update({
-            view: DOM.promptsPopup, 
-            question: event?.detail?.question, 
-            model: event?.detail?.model_configuration
-            })
+          }          
           
         });
+
+      function updatePropmptsPopup(detail){
+        if (!detail?.question || !detail?.model_configuration) return;
+        promptsPopup.update({
+          view: DOM.promptsPopup, 
+          question: detail.question, 
+          model: detail.model_configuration
+        })
+      }
     })
   
     
