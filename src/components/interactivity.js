@@ -34,8 +34,7 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
     DOM.qIcons
       .on("mouseenter", (event, d) => highlight({goal: d.goal}))
       .on("click", (event, d) => {
-        if (isTouchDevice || d.goal === "other") return;
-        window.open(UPGRADER_LINK + d.goal, '_blank').focus();
+        highlight({goal: d.goal});
       });
     // DOM.qRects
     //   .on("mouseenter", (event, d) => highlight({question: d.question}))
@@ -144,11 +143,11 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
         <p>${sdgProps.description}</p>
       `);
 
-      if (isTouchDevice && goal !== "other")
-        DOM.sdgDetails.append("p").append("a")
+      if (goal !== "other")
+        DOM.sdgDetails.append("p").attr("class", "upgrader-link").append("a")
           .attr("href", UPGRADER_LINK + goal)
           .attr("target", "_blank")
-          .text("See topic on Upgrader app");
+          .text("See the topic in Upgrader App");
 
       DOM.sdgDetails.select(".info-image").append(() => sdgicons.find(f => f.goal===goal).image);
       DOM.sdgDetails.select("h2").style("color", sdgcolors[goal]);

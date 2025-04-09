@@ -123,6 +123,9 @@ html, body {
 .info-image img {
   width: 100%;
 }
+.upgrader-link{
+  font-size: var(--font-small);
+}
 .info-hint-topics {
   flex: none;
 }
