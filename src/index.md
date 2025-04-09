@@ -183,6 +183,23 @@ const setSelectedModel = (vendor, model)=>{
 }
 ```
 
+```js
+let selectedQuestion = null;
+let selectedGoal = null;
+let selectedMC = null;
+function setSelected(arg){
+  selectedQuestion = arg?.question || null;
+  selectedGoal = arg?.goal || null;
+  selectedMC = arg?.mc || null;
+}
+function getSelected(){
+  if (selectedQuestion || selectedGoal || selectedMC)
+    return {question: selectedQuestion, goal: selectedGoal, mc: selectedMC};
+  else
+    return null;
+}
+```
+
 
 ```js 
 function getTracksConfig(){
@@ -278,7 +295,7 @@ const callback = () => {
   const { isTouchDevice, isSmallScreen } = layout;
 
   const pp = promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos, model_configurationWithHumanMap, questionMap, datapoints_prompt_variationMap, model_configurationWithHuman, selectedModels, promptsMap})
-  interactivity({tracks, sdgcolors, questionMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isTouchDevice, isSmallScreen});
+  interactivity({tracks, sdgcolors, questionMap, sdgicons, sdgGoalText, selectedModels, promptsPopup: pp, isTouchDevice, isSmallScreen, setSelected, getSelected});
 ```
 
 

@@ -123,9 +123,6 @@ html, body {
 .info-image img {
   width: 100%;
 }
-.upgrader-link{
-  font-size: var(--font-small);
-}
 .info-hint-topics {
   flex: none;
 }
@@ -165,9 +162,18 @@ html, body {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-.info-sdg-details a {
+.info-question-details p.ungoalheader {
+  font-size: var(--font-small);
+  margin-bottom: 0px;
+}
+.info-question-details h2 {
+  font-size: var(--font-large);
+}
+.info-sdg-details a, .info-question-details a {
   text-decoration: underline;
   color: blue;
+  cursor: pointer;
+  font-size: var(--font-small);
 }
 
 

@@ -2,7 +2,7 @@ import * as d3 from "npm:d3";
   
 const UPGRADER_LINK = "https://upgrader.gapminder.org/t/";
 
-export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalText, selectedModels, sdgicons, promptsPopup, isTouchDevice, isSmallScreen}){
+export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalText, setSelected, getSelected, sdgicons, promptsPopup, isTouchDevice, isSmallScreen}){
 
     function toSentenceCase(str) {
       if (!str) return str; // Handle empty or null strings
@@ -18,7 +18,6 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
     DOM.qPileContainer = DOM.container.select(".question-pile-container");
     DOM.qIcons = DOM.qIconContainer.selectAll(".question-icon");
     DOM.qPiles = DOM.qPileContainer.selectAll(".question-pile");
-    DOM.qRects = DOM.qPileContainer.selectAll(".question-rect");
     DOM.qDetails = DOM.container.select(".info-question-details");
     DOM.sdgDetails = DOM.container.select(".info-sdg-details");
     DOM.hints = DOM.container.selectAll(".hoverHint");
@@ -27,26 +26,18 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
     DOM.promptsPopup = DOM.container.select(".prompts-popup");
   
     DOM.questionsSection
-      .on("mouseleave", (event, d) => {
+      .on("mouseleave", () => {
         if (isTouchDevice) return;
         highlight(null)
       });
     DOM.qIcons
-      .on("mouseenter", (event, d) => highlight({goal: d.goal}))
+      .on("mouseenter", (event, d) => {
+        highlight({goal: d.goal})
+      })
       .on("click", (event, d) => {
-        highlight({goal: d.goal});
+        setSelected({goal: d.goal, mc: null, question: null}); 
+        highlight();
       });
-    // DOM.qRects
-    //   .on("mouseenter", (event, d) => highlight({question: d.question}))
-    //   .on("click", (event, d) => {
-    //     const defaultModel = Object.values(selectedModels)[0];
-    
-    //     promptsPopup.update({
-    //      view: DOM.promptsPopup, 
-    //       question: d.question,
-    //       model: promptsPopup.getState.model || defaultModel,
-    //         })
-    //   });
 
   
     tracks.forEach(track => {
@@ -64,67 +55,75 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
       });
 
       d3.select(track.chart.node)
-        .on("circlehover", (event, i) => {
-          if (isTouchDevice) return;
+        .on("circlehover", event => {
           const question = event?.detail?.question || null;
           
           if (question) {
-            track.tooltip.show(event.detail);
             trackNode.style("z-index", 1);
+            track.tooltip.show(event.detail);
           } else {
             track.tooltip.hide();
           }
-          highlight({question});
 
-        })
-        .on("circleclick", event => {
-          updatePropmptsPopup(event?.detail);
+          highlight({question});
         })
         .on("circletouch", event => {
           const question = event?.detail?.question || null;
+          const mc = event?.detail?.model_configuration || null;
+          
           if (question) {
-            track.tooltip.show(event.detail);
             trackNode.style("z-index", 1);
+            track.tooltip.show(event.detail);
             track.tooltip.clickToMore(()=>{
-              updatePropmptsPopup(event.detail);              
+              buildPropmptsPopup(event.detail);              
             })
           } else {
             track.tooltip.hide();
-          }          
-          
-        });
+          }
 
-      function updatePropmptsPopup(detail){
-        if (!detail?.question || !detail?.model_configuration) return;
-        promptsPopup.update({
-          view: DOM.promptsPopup, 
-          question: detail.question, 
-          model: detail.model_configuration
+          setSelected({question, mc, goal: null});
+          highlight();
         })
-      }
+        .on("circleclick", event => {
+          const question = event?.detail?.question || null;
+          const mc = event?.detail?.model_configuration || null;
+          setSelected({question, mc, goal: null});
+          highlight();
+        });
     })
   
+
+
+
+
     
-    function highlight(spec){
+    function highlight(highlightSpec){
+      const selectedSpec = getSelected();
+      console.log({highlightSpec, selectedSpec})
   
-      tracks.forEach(track => track.chart.render(spec));
-      
-      if (!spec || spec.goal) {
-        DOM.qRects.style("opacity", 1)
-      }
-  
-      if(spec && spec.goal) {
-        buildSdgDetails(spec.goal);
+      tracks.forEach(track => track.chart.render(highlightSpec, selectedSpec));
+        
+      if(highlightSpec && highlightSpec.goal) {
+        buildSdgDetails(highlightSpec.goal);
         showHideTitleAndHint(false);
         DOM.qDetails.style("display", "none").text("");
       }
-      if(spec && spec.question) {
-        DOM.qRects.style("opacity", q => q.question === spec.question ? 1 : 0.1)
-        buildQuestionDetails(spec.question);
+      if(highlightSpec && highlightSpec.question) {
+        buildQuestionDetails(highlightSpec.question, null);
         showHideTitleAndHint(false);
         DOM.sdgDetails.style("display", "none").text("");
       }
-      if(!spec) {
+      if(selectedSpec && selectedSpec.goal) {
+        buildSdgDetails(selectedSpec.goal);
+        showHideTitleAndHint(false);
+        DOM.qDetails.style("display", "none").text("");
+      }
+      if(selectedSpec && selectedSpec.question) {
+        buildQuestionDetails(selectedSpec.question, selectedSpec.mc);
+        showHideTitleAndHint(false);
+        DOM.sdgDetails.style("display", "none").text("");
+      }
+      if(!highlightSpec && !selectedSpec) {
         showHideTitleAndHint(true);
         DOM.qDetails.style("display", "block").text("");
         DOM.sdgDetails.style("display", "none").text("");
@@ -154,7 +153,7 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
       
     }
 
-    function buildQuestionDetails(question){
+    function buildQuestionDetails(question, mc){
       const questionProps = questionMap.get(question);
       const goal = questionProps.sdg_world_topics;
       function getCorrectnessClassName(num){
@@ -169,7 +168,7 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
       }
       //<div class="info-image"></div>
       DOM.qDetails.style("display", "block").html(`
-        <p>${sdgGoalText[goal].title}, Question ${question}</p>
+        <p class="ungoalheader">${sdgGoalText[goal].title}, Question ${question}</p>
         <h2>${questionProps.short_title}</h2>
         <p>${questionProps.published_version_of_question || "The question probably had images in it, this app doesn't support it yet"}</p>
         <p><span class="${getCorrectnessClassName(questionProps.option_a_correctness)}">
@@ -181,15 +180,30 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
         <p><span class="${getCorrectnessClassName(questionProps.option_c_correctness)}">
           ${getCorrectnessText(questionProps.option_c_correctness)}
         </span><br/>C. ${questionProps.option_c}</p>
+        ${mc ? '<p class="link-drilldown"><a>Explore question variations</a></p>' : ''}
       `);
-      //DOM.qDetails.select(".info-image").html(`<img crossorigin="anonymous" src=${sdgicons.find(f => f.goal===goal).image.src}>`)
-      DOM.qDetails.select("h2").style("color", sdgcolors[goal]);
+      
+      DOM.qDetails.select(".link-drilldown")
+        .on("click", ()=>{
+          buildPropmptsPopup({question, model_configuration: mc});
+        })
+      DOM.qDetails.selectAll("h2,p.ungoalheader").style("color", sdgcolors[goal]);
     }
 
     function showHideTitleAndHint(show){
       DOM.hints.style("display", show || isSmallScreen ? "block" : "none");
       DOM.intro.style("display", show || isSmallScreen ? "inline-block" : "none");
       DOM.video.style("display", show || isSmallScreen ? "inline-block" : "none");
+    }
+
+
+    function buildPropmptsPopup(detail){
+      if (!detail?.question || !detail?.model_configuration) return;
+      promptsPopup.update({
+        view: DOM.promptsPopup, 
+        question: detail.question, 
+        model: detail.model_configuration
+      })
     }
   
     //highlight(null);

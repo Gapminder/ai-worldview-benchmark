@@ -37,17 +37,20 @@ export default function OneChartCanvas({
   
     
   
-    function render(highlightSpec) {
+    function render(highlightSpec, selectedSpec) {
 
       context.clearRect(0, 0, width, height);
 
       for (const node of data) {
-        const highlighted = 
-          highlightSpec && highlightSpec.goal === questionMap.get(node.question).sdg_world_topics 
-          || highlightSpec && highlightSpec.question === node.question;
+        const goal = questionMap.get(node.question).sdg_world_topics;
+        const question = node.question;
+
+        const highlighted = highlightSpec?.goal === goal || highlightSpec?.question === question;
+        const selected = selectedSpec?.goal === goal || selectedSpec?.question === question;
+        const noneHLnoneSL = !highlightSpec && !selectedSpec;
   
-        const radius = highlightSpec && highlighted ? 7 : node.r;
-        const alpha = highlightSpec && !highlighted ? opacityDim : 1; // Change opacity if highlighted
+        const radius = (highlighted || selected) ? 7 : node.r;
+        const alpha = (noneHLnoneSL || highlighted || selected) ? 1 : opacityDim;
         const shift = heightMinusMargins/2 + marginTop;
 
         context.beginPath();
@@ -57,7 +60,7 @@ export default function OneChartCanvas({
         context.fill();
   
         // Add a stroke
-        if (highlighted) {
+        if (highlighted || selected) {
           context.lineWidth = 2; // Adjust the stroke width
           context.strokeStyle = "white"; // Stroke color
           context.stroke();
@@ -68,8 +71,9 @@ export default function OneChartCanvas({
 
       for (const node of data) {
         const shift = heightMinusMargins/2 + marginTop;
+        const question = node.question;
 
-        if (highlightSpec && highlightSpec.question === node.question) {
+        if (highlightSpec?.question === question || selectedSpec?.question === question) {
           drawCenteredText(context, Math.round(node.correct_rate) + "%", xScale(node.correct_rate) + 2, node.y + shift + 20, "bold 16px Arial", "black");
         }
       }
@@ -99,6 +103,7 @@ export default function OneChartCanvas({
       // Add interactivity
     let lastHoveredIndex = null;
     canvas.addEventListener("mousemove", (event) => {
+      if (event.pointerType === "touch") return;
       const hoveredIndex = getNearestIndex(event);
   
       if (hoveredIndex !== lastHoveredIndex)
@@ -112,9 +117,6 @@ export default function OneChartCanvas({
         canvas.dispatchEvent(new CustomEvent("circletouch", { detail: data[hoveredIndex] }));
       else
         canvas.dispatchEvent(new CustomEvent("circleclick", { detail: data[hoveredIndex] }));
-    });
-
-    canvas.addEventListener("touchend", (event) => {
     });
   
     function getNearestIndex(event){
