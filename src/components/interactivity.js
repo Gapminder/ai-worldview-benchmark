@@ -108,7 +108,6 @@ export default function interactivity({tracks, sdgcolors, questionMap, sdgGoalTe
     
     function highlight(highlightSpec){
       const selectedSpec = getSelected();
-      console.log({highlightSpec, selectedSpec})
   
       tracks.forEach(track => track.chart.render(highlightSpec, selectedSpec));
         

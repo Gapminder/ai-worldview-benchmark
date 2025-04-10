@@ -15,6 +15,7 @@ export default function OneChartCanvas({
     highres = true,
     spellOutAverage = false,
     chimpLine = false,
+    selected,
   }) {
     const canvas = document.createElement("canvas");
     canvas.id = vendor;
@@ -140,7 +141,7 @@ export default function OneChartCanvas({
       return nearestIndex;
     }
     
-    render();
+    render(null, selected);
   
     return {node: canvas, render};
   }

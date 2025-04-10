@@ -249,7 +249,7 @@ const tracks = tracksConfig.map(config => {
     left: margin.left, 
     ...config
   });
-  const chart = OneChartCanvas({questionMap, ...config});
+  const chart = OneChartCanvas({questionMap, selected: getSelected(), ...config});
 
   const div = d3.create("div")
     .attr("class", "track")
