@@ -1,4 +1,4 @@
-import * as d3 from "npm:d3";
+import * as d3 from "npm:d3"; 
 
 const cache = {};
 const getCacheKey = (mc, scale) => mc + scale.range()[0] + scale.range()[1];

@@ -1,5 +1,5 @@
 
-import * as d3 from "npm:d3";
+import * as d3 from "npm:d3"; 
   
 const dx = 50;
 const h = 50;

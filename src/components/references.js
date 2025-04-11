@@ -1,4 +1,4 @@
-import { FileAttachment } from "@observablehq/stdlib";
+import { FileAttachment } from "@observablehq/stdlib"; 
   
 //this only works if images are copied to /dist folder
 //this is achieved by mentioning them in index.md, see IMAGE IMPORTS

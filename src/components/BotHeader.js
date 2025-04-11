@@ -1,5 +1,5 @@
 
-import * as d3 from "npm:d3";
+import * as d3 from "npm:d3"; 
 
 const dateFormatter = d3.utcFormat("%b %Y");
 

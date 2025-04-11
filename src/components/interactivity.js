@@ -1,4 +1,4 @@
-import * as d3 from "npm:d3";
+import * as d3 from "npm:d3"; 
   
 const UPGRADER_LINK = "https://upgrader.gapminder.org/t/";
 
