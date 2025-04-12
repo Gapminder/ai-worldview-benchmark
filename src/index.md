@@ -174,7 +174,11 @@ const initialVendorList = initiallySelectedModelsByVendor.sort(
   ([vendor_a, model_a],[vendor_b, model_b]) => model_configurationWithHumanMap.get(model_b).correctness - model_configurationWithHumanMap.get(model_a).correctness
 ).map(([vendor, model]) => vendor).filter(f => f!== "Humans");
 
-const initialOverallCorrect = d3.mean(initiallySelectedModelsByVendor.map(([vendor, model_id]) => model_configurationWithHumanMap.get(model_id).correctness));
+const initialOverallCorrect = d3.mean(
+  initiallySelectedModelsByVendor
+    .filter(([vendor]) => vendor !== "Humans")
+    .map(([vendor, model_id]) => model_configurationWithHumanMap.get(model_id).correctness)
+  );
 
 const selectedModels = Mutable(Object.fromEntries(initiallySelectedModelsByVendor));
 const setSelectedModel = (vendor, model)=>{
