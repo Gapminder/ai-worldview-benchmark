@@ -12,22 +12,9 @@ npm run dev
 Then visit <http://localhost:3000> to preview the app. For more, see [the docs](https://observablehq.com/framework/getting-started).
 
 ## Deploy instructions
-⚠️ This is unusual: the app won't automatically show the new data when it updates on [github repo](https://github.com/open-numbers/ddf--gapminder--ai_worldview_benchmark.git). It caches the data itself and needs to be redeployed.
+⚠️ This is unusual: data is bundled with the app, so the app won't automatically show the new data when data updates on [github repo](https://github.com/open-numbers/ddf--gapminder--ai_worldview_benchmark.git). App needs to be redeployed.
 
-~Angie, Dab, Ola, Semio have access to [Gapminder workspace](https://observablehq.com/@gapminder) on Observable. Log in, see [Data Apps](https://observablehq.com/projects/@gapminder/ai-worldview-benchmark/deploys ) and press "Deploy" button~
-
-~Also, pushing to `master` branch on GitHub will trigger the redeploy~
-
-This is for now not available due to the [issue in Observable framework deploy](https://github.com/observablehq/framework/discussions/1919#discussioncomment-12324803)
-
-So deploy manually by setting up this repo on your computer:
-
-```sh
-npm install
-npm run clean
-npm run build
-npm run deploy
-```
+The app is deployed on Gapminder Cloudflare pages, which is connected to this GitHub repo. Pushing to `master` branch here will trigger the redeploy.
 
 ## Project structure
 
@@ -46,6 +33,6 @@ npm run deploy
 | `npm install`        | Install or reinstall dependencies                        |
 | `npm run dev`        | Start local preview server                               |
 | `npm run build`      | Build your static site, generating `./dist`              |
-| `npm run deploy`     | Deploy your app to Observable                            |
+| ~npm run deploy~     | Deploy your app to Observable (not used now)             |
 | `npm run clean`      | Clear the local data loader cache                        |
 | `npm run observable` | Run commands like `observable help`                      |
