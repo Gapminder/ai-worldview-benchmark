@@ -13,7 +13,7 @@ npm run dev
 Then visit <http://localhost:3000> to preview the app. For more, see [the docs](https://observablehq.com/framework/getting-started).
 
 ## Deploy instructions
-⚠️ This is unusual: data is bundled with the app, so the app won't automatically show the new data when data updates on [github repo](https://github.com/open-numbers/ddf--gapminder--ai_worldview_benchmark.git). App needs to be redeployed.
+⚠️ This is unusual: data is bundled with the app, so the app won't automatically show the new data when data updates on [github repo](https://github.com/open-numbers/ddf--gapminder--ai_worldview_benchmark.git). App needs to be redeployed. Waffle server is not used in this app, it's fully self-contained.
 
 The app is deployed on Gapminder Cloudflare pages, which is connected to this GitHub repo. Pushing to `master` branch here will trigger the redeploy.
 
