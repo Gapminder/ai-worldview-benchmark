@@ -91,7 +91,7 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
       const vendor = model_configurationWithHumanMap.get(model).vendor;
       const modelName = model_configurationWithHumanMap.get(model).model_name;
       view.append("img")
-        .attr("src", botLogos[vendor].src)
+        .attr("src", botLogos[vendor]?.src)
         .style("width", "40px")
         .style("height", "40px")
         .style("position", "relative")
@@ -102,7 +102,7 @@ export default function promptsPopup({sdgcolors, sdgGoalText, sdgicons, botLogos
     
       view.append("h1").style("display", "inline-block").style("margin-right", "10px").style("margin-left", "10px").text("–vs–");
       
-      view.append("img").attr("src", sdgicons.find(f => f.goal===goal).image.src)
+      view.append("img").attr("src", sdgicons.find(f => f.goal===goal).image?.src)
         .style("width", "40px")
         .style("height", "40px")
         .style("position", "relative")
